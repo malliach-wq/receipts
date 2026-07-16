@@ -562,7 +562,11 @@ async function runOCR(file){
       lbl.textContent='Rendering PDF page 1...';bar.style.width='8%';
       source=await pdfToCanvas(file);
     }
-    const worker=await Tesseract.createWorker('eng',1,{
+    lbl.textContent='Loading OCR engine...';bar.style.width='5%';
+    const{data:{text}}=await Tesseract.recognize(source,'eng',{
+      workerPath:'https://unpkg.com/tesseract.js@4.1.1/dist/worker.min.js',
+      corePath:'https://unpkg.com/tesseract.js-core@4.0.1/',
+      langPath:'https://tessdata.projectnaptha.com/4.0.0',
       logger:m=>{
         if(m.status==='recognizing text'){
           bar.style.width=(m.progress*100)+'%';
@@ -570,8 +574,6 @@ async function runOCR(file){
         }else{lbl.textContent=m.status;}
       }
     });
-    const{data:{text}}=await worker.recognize(source);
-    await worker.terminate();
     const parsed=parseReceiptText(text);
     populateEditForm(parsed,text);
     showView('view-edit');
