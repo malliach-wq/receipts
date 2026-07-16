@@ -4,335 +4,183 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Receipts</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --accent:#714b67;--accent-light:#f3eef1;--accent-dark:#5a3a52;
   --bg:#ffffff;--surface:#f8f8f8;--border:#e8e8e8;--border-light:#f0f0f0;
   --text:#1a1a1a;--text-muted:#888;--text-light:#bbb;
-  --danger:#e53e3e;--success:#2d7d46;--warning:#b7791f;
+  --danger:#e53e3e;--success:#2d7d46;
   --radius:10px;--sidebar-w:280px;
 }
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-/* TOPBAR */
+/* ── TOPBAR ── */
 .topbar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
 .topbar-icon{width:26px;height:26px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
 .topbar-title{font-size:.9rem;font-weight:600;color:var(--text);letter-spacing:.01em}
 .topbar-spacer{flex:1}
 .topbar-count{font-size:.75rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:2px 9px}
+.topbar-analytics-btn{font-size:.78rem;font-weight:600;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent);border-radius:99px;padding:3px 12px;cursor:pointer;transition:all .15s}
+.topbar-analytics-btn:hover{background:var(--accent);color:#fff}
 
-/* LAYOUT */
+/* ── LAYOUT ── */
 .layout{display:flex;flex:1;overflow:hidden}
 
-/* SIDEBAR */
+/* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar-w);border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--bg);flex-shrink:0}
-.sidebar-header{padding:14px 16px 10px;border-bottom:1px solid var(--border-light)}
+.sidebar-header{padding:12px 14px 10px;border-bottom:1px solid var(--border-light);display:flex;flex-direction:column;gap:8px}
 .btn-new{width:100%;padding:9px 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius);font-size:.83rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;justify-content:center;transition:background .15s}
 .btn-new:hover{background:var(--accent-dark)}
+.search-box{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;font-family:inherit;outline:none;transition:border-color .15s;background:var(--surface)}
+.search-box:focus{border-color:var(--accent);background:#fff}
 .sidebar-list{flex:1;overflow-y:auto;padding:8px}
 .receipt-card{padding:11px 12px;border-radius:8px;cursor:pointer;border:1.5px solid transparent;margin-bottom:4px;transition:all .15s}
 .receipt-card:hover{background:var(--surface);border-color:var(--border)}
 .receipt-card.active{background:var(--accent-light);border-color:var(--accent)}
-.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
-.rc-name{font-size:.84rem;font-weight:600;color:var(--text)}
-.rc-total{font-size:.82rem;font-weight:700;color:var(--accent)}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
+.rc-name{font-size:.84rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.rc-total{font-size:.82rem;font-weight:700;color:var(--accent);flex-shrink:0}
 .rc-meta{font-size:.72rem;color:var(--text-muted)}
 .sidebar-empty{padding:32px 16px;text-align:center;color:var(--text-muted);font-size:.82rem;line-height:1.6}
 
-/* MAIN */
+/* ── MAIN ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 
-/* PASTE VIEW */
-.paste-view{flex:1;display:flex;flex-direction:column;padding:28px 32px;max-width:760px;width:100%;margin:0 auto;overflow-y:auto}
-.paste-view h2{font-size:1.1rem;font-weight:700;margin-bottom:6px}
-.paste-view .sub{font-size:.82rem;color:var(--text-muted);margin-bottom:20px}
-.form-row{margin-bottom:16px}
-.form-row label{display:block;font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-.form-row input,.form-row textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:.85rem;color:var(--text);resize:vertical;outline:none;transition:border-color .15s}
-.form-row input:focus,.form-row textarea:focus{border-color:var(--accent)}
-.form-row textarea{min-height:220px;font-family:'Courier New',monospace;line-height:1.5}
+/* ── NEW RECEIPT PANEL ── */
+.new-view{flex:1;display:flex;flex-direction:column;padding:24px 32px;max-width:820px;width:100%;margin:0 auto;overflow-y:auto;gap:18px}
+.new-view h2{font-size:1.05rem;font-weight:700}
+.new-view .sub{font-size:.82rem;color:var(--text-muted);margin-top:2px}
+
+/* DROP ZONE */
+.drop-zone{border:2.5px dashed var(--border);border-radius:14px;padding:32px 24px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);position:relative}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:var(--accent-light)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-icon{font-size:2rem;margin-bottom:8px;opacity:.65}
+.dz-text{font-size:.88rem;font-weight:600;color:var(--text-muted);margin-bottom:3px}
+.dz-sub{font-size:.74rem;color:var(--text-light)}
+
+/* OCR PROGRESS */
+.ocr-progress{display:none;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--surface)}
+.ocr-progress.show{display:block}
+.ocr-ph{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.ocr-spinner{width:15px;height:15px;border:2.5px solid var(--accent-light);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ocr-lbl{font-size:.82rem;font-weight:600;color:var(--text)}
+.ocr-pct{font-size:.76rem;color:var(--text-muted);margin-left:auto}
+.ocr-track{height:3px;background:var(--border)}
+.ocr-fill{height:100%;background:var(--accent);transition:width .3s;width:0%}
+
+/* IMAGE PREVIEW */
+.img-prev{display:none;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);overflow:hidden}
+.img-prev.show{display:block}
+.img-prev-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border)}
+.img-prev-hdr span{font-size:.78rem;font-weight:600;color:var(--text-muted)}
+.img-prev-hdr button{font-size:.74rem;color:var(--danger);background:none;border:none;cursor:pointer;font-weight:600}
+.img-prev img{display:block;max-width:100%;max-height:240px;object-fit:contain;margin:0 auto;padding:10px}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:12px;color:var(--text-light);font-size:.73rem;font-weight:600;letter-spacing:.06em}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* FORM */
+.form-row{display:flex;flex-direction:column;gap:5px}
+.form-row label{font-size:.76rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.form-row input,.form-row textarea,.form-row select{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:.84rem;color:var(--text);outline:none;transition:border-color .15s;background:#fff}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--accent)}
+.form-row textarea{min-height:140px;font-family:'Courier New',monospace;font-size:.78rem;line-height:1.6;resize:vertical}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* EDITABLE ITEMS TABLE (new receipt flow) */
+.items-editor{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.items-editor-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.items-editor-hdr span{font-size:.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.items-editor table{width:100%;border-collapse:collapse;font-size:.8rem}
+.items-editor th{text-align:left;padding:7px 10px;font-size:.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);background:var(--surface)}
+.items-editor td{padding:4px 6px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+.items-editor tr:last-child td{border-bottom:none}
+.items-editor input,.items-editor select{width:100%;padding:5px 7px;border:1.5px solid transparent;border-radius:6px;font-family:inherit;font-size:.8rem;color:var(--text);background:transparent;outline:none;transition:border-color .12s}
+.items-editor input:focus,.items-editor select:focus{border-color:var(--accent);background:#fff}
+.items-editor .del-row{width:28px;height:28px;border:none;background:none;cursor:pointer;color:var(--text-light);font-size:15px;border-radius:4px;transition:all .12s;padding:0;display:flex;align-items:center;justify-content:center}
+.items-editor .del-row:hover{color:var(--danger);background:rgba(229,62,62,.08)}
+.add-row-btn{width:100%;padding:8px;border:none;background:none;cursor:pointer;color:var(--accent);font-size:.8rem;font-weight:600;text-align:left;padding-left:14px;transition:background .12s}
+.add-row-btn:hover{background:var(--accent-light)}
+.total-row{display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:10px 14px;border-top:2px solid var(--border);background:var(--surface);font-size:.84rem;font-weight:700}
+.total-row input{width:100px;text-align:right;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:.84rem;font-weight:700;color:var(--accent);outline:none;transition:border-color .12s}
+.total-row input:focus{border-color:var(--accent)}
+
+/* CATEGORY CHIPS */
+.cat-chip{display:inline-block;padding:2px 8px;border-radius:99px;font-size:.68rem;font-weight:600;white-space:nowrap}
+.cat-produce{background:#e6f9ed;color:#1a6e38}
+.cat-dairy{background:#e8f4fd;color:#1a5f8a}
+.cat-bakery{background:#fef3e2;color:#8a5500}
+.cat-meat{background:#fde8e8;color:#8a1a1a}
+.cat-seafood{background:#e0f0f8;color:#0d5273}
+.cat-frozen{background:#eaf0ff;color:#2a3f8a}
+.cat-beverages{background:#fef9e8;color:#7a5c00}
+.cat-snacks{background:#fde8f8;color:#6a1a6a}
+.cat-household{background:#f0f0f0;color:#444}
+.cat-personal{background:#fce8f4;color:#7a1a5a}
+.cat-pharmacy{background:#e8fce8;color:#1a6a1a}
+.cat-other{background:#f0f0f0;color:#666}
+
+/* BTNS */
 .btn-row{display:flex;gap:10px;flex-wrap:wrap}
 .btn{padding:9px 18px;border-radius:var(--radius);font-size:.83rem;font-weight:600;cursor:pointer;border:none;transition:all .15s}
 .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-dark)}
 .btn-ghost{background:transparent;color:var(--text-muted);border:1.5px solid var(--border)}.btn-ghost:hover{border-color:#aaa;color:var(--text)}
 .btn-danger{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:5px 12px;font-size:.76rem}
+.btn-icon{background:none;border:none;cursor:pointer;padding:5px;border-radius:6px;color:var(--text-muted);transition:all .12s;font-size:15px}
+.btn-icon:hover{background:var(--surface);color:var(--text)}
 
-/* DETAIL VIEW */
+/* ── DETAIL VIEW ── */
 .detail-view{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.detail-header{padding:18px 28px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.detail-header h2{font-size:1rem;font-weight:700;flex:1}
-.detail-meta{font-size:.75rem;color:var(--text-muted)}
+.detail-header{padding:16px 28px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;flex-shrink:0}
+.detail-hdr-text{flex:1;min-width:0}
+.detail-hdr-text h2{font-size:1rem;font-weight:700;margin-bottom:2px}
+.detail-meta{font-size:.74rem;color:var(--text-muted)}
 .detail-body{flex:1;overflow-y:auto;padding:20px 28px}
-
-/* RECEIPT TABLE */
-.receipt-table{width:100%;border-collapse:collapse;font-size:.83rem}
-.receipt-table th{text-align:left;padding:8px 10px;font-size:.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);background:var(--surface)}
-.receipt-table td{padding:9px 10px;border-bottom:1px solid var(--border-light)}
+.receipt-table{width:100%;border-collapse:collapse;font-size:.83rem;margin-bottom:18px}
+.receipt-table th{text-align:left;padding:8px 10px;font-size:.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);background:var(--surface)}
+.receipt-table td{padding:8px 10px;border-bottom:1px solid var(--border-light);vertical-align:middle}
 .receipt-table tr:hover td{background:var(--surface)}
-.receipt-table .price{text-align:right;font-weight:500;color:var(--accent)}
-.receipt-table .qty{text-align:center;color:var(--text-muted)}
+.receipt-table .col-price{text-align:right;font-weight:500;color:var(--accent);white-space:nowrap}
+.receipt-table .col-qty{text-align:center;color:var(--text-muted)}
+.receipt-table .col-cat{white-space:nowrap}
 .receipt-total-row td{font-weight:700;border-top:2px solid var(--border);border-bottom:none;padding-top:12px}
-.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:.68rem;font-weight:600}
-.badge-matched{background:#e6f4ec;color:#2d7d46}
-.badge-new{background:#fff3cd;color:#856404}
-.raw-toggle{font-size:.75rem;color:var(--accent);cursor:pointer;text-decoration:underline;margin-top:14px;display:inline-block}
-.raw-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-family:'Courier New',monospace;font-size:.75rem;line-height:1.6;white-space:pre-wrap;word-break:break-word;margin-top:8px;display:none}
+.raw-toggle{font-size:.74rem;color:var(--accent);cursor:pointer;text-decoration:underline;display:inline-block;margin-top:4px}
+.raw-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;font-family:'Courier New',monospace;font-size:.74rem;line-height:1.6;white-space:pre-wrap;word-break:break-word;margin-top:8px;display:none}
 .raw-box.open{display:block}
 
-/* EMPTY / PARSE RESULT */
-.parse-result{margin-top:20px}
-.parse-notice{padding:10px 14px;border-radius:var(--radius);font-size:.82rem;margin-bottom:12px}
-.parse-notice.info{background:var(--accent-light);color:var(--accent-dark)}
-.parse-notice.warn{background:#fff3cd;color:#856404}
+/* EDIT MODE overlay on detail table */
+.detail-body.editing .receipt-table td.editable{padding:3px 5px}
+.detail-body.editing .receipt-table td.editable input,
+.detail-body.editing .receipt-table td.editable select{width:100%;padding:5px 7px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:.8rem;color:var(--text);background:#fff;outline:none;transition:border-color .12s}
+.detail-body.editing .receipt-table td.editable input:focus,
+.detail-body.editing .receipt-table td.editable select:focus{border-color:var(--accent)}
+.edit-banner{background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);padding:9px 14px;margin-bottom:14px;font-size:.8rem;color:var(--accent-dark);display:flex;align-items:center;gap:10px}
+.edit-banner .save-edit-btn{margin-left:auto;padding:5px 14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer}
+.edit-banner .cancel-edit-btn{padding:5px 10px;background:none;color:var(--accent-dark);border:1px solid var(--accent);border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:99px;font-size:.82rem;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* EMPTY STATE */
-.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);padding:40px}
-.empty-icon{font-size:3rem;opacity:.4}
-.empty-state h3{font-size:.95rem;font-weight:600;color:var(--text)}
-.empty-state p{font-size:.82rem;text-align:center;line-height:1.6;max-width:280px}
-
-@media(max-width:600px){
-  .sidebar{width:100%;display:none}.sidebar.mob-open{display:flex;position:fixed;inset:52px 0 0 0;z-index:50}
-  .paste-view{padding:20px 16px}
-  .detail-header{padding:14px 16px 12px}
-  .detail-body{padding:14px 16px}
-}
-</style>
-</head>
-<body>
-
-<div class="topbar">
-  <div class="topbar-icon">🧾</div>
-  <span class="topbar-title">My Receipts</span>
-  <div class="topbar-spacer"></div>
-  <span class="topbar-count" id="countBadge">0 receipts</span>
-</div>
-
-<div class="layout">
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <button class="btn-new" onclick="showNew()">＋ New Receipt</button>
-    </div>
-    <div class="sidebar-list" id="sidebarList"></div>
-  </div>
-
-  <div class="main" id="main">
-    <!-- filled dynamically -->
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-const R_KEY = 'shopping_receipts';
-let receipts = {}, activeId = null, parseResults = null;
-
-function load(){ try{return JSON.parse(localStorage.getItem(R_KEY))||{}}catch(e){return{}} }
-function save(){ try{localStorage.setItem(R_KEY,JSON.stringify(receipts))}catch(e){} }
-function rid(){ return 'r'+Date.now()+Math.random().toString(36).slice(2,6) }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
-
-function toast(msg, dur=2400){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), dur);
-}
-
-function fmt(n){ return '€'+Number(n||0).toFixed(2) }
-
-// Parse receipt text → extract line items with prices
-function parseReceiptText(text){
-  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
-  const priceRe = /(\d{1,4}[.,]\d{2})\s*$/;
-  const qtyRe = /^(\d+)\s*[xX×]\s*/;
-  const items = [];
-  let total = 0;
-
-  for(const line of lines){
-    // Skip likely header/footer lines
-    if(/^(total|subtotal|vat|tax|change|cash|card|thank|date|time|tel|www|receipt|invoice|store|branch)/i.test(line)) {
-      const pm = line.match(priceRe);
-      if(/total/i.test(line) && pm) total = parseFloat(pm[1].replace(',','.'));
-      continue;
-    }
-    const pm = line.match(priceRe);
-    if(!pm) continue;
-    const price = parseFloat(pm[1].replace(',','.'));
-    let name = line.slice(0, line.length - pm[0].length).trim();
-    let qty = 1;
-    const qm = name.match(qtyRe);
-    if(qm){ qty = parseInt(qm[1]); name = name.slice(qm[0].length).trim(); }
-    if(!name || price <= 0) continue;
-    items.push({ name, qty, price });
-  }
-
-  // If no explicit total found, sum items
-  if(!total && items.length) total = items.reduce((s,i)=>s+i.price*i.qty, 0);
-
-  return { items, total };
-}
-
-function renderSidebar(){
-  const list = document.getElementById('sidebarList');
-  const entries = Object.entries(receipts).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
-  document.getElementById('countBadge').textContent = entries.length + (entries.length===1?' receipt':' receipts');
-
-  if(!entries.length){
-    list.innerHTML = '<div class="sidebar-empty">No receipts yet.<br>Paste a receipt to get started.</div>';
-    return;
-  }
-
-  list.innerHTML = entries.map(([id,r])=>`
-    <div class="receipt-card${id===activeId?' active':''}" onclick="selectReceipt('${id}')">
-      <div class="rc-top">
-        <span class="rc-name">${esc(r.name||'Receipt')}</span>
-        <span class="rc-total">${fmt(r.total)}</span>
-      </div>
-      <div class="rc-meta">${r.items?.length||0} items · ${new Date(r.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</div>
-    </div>
-  `).join('');
-}
-
-function showNew(){
-  activeId = null;
-  renderSidebar();
-  renderPasteView();
-}
-
-function renderPasteView(prefillText=''){
-  document.getElementById('main').innerHTML = `
-    <div class="paste-view">
-      <h2>Paste Receipt</h2>
-      <p class="sub">Copy text from a scanned receipt or type it in. One item per line ending with a price.</p>
-      <div class="form-row">
-        <label>Receipt Name / Store</label>
-        <input type="text" id="rName" placeholder="e.g. Lidl — 15 Apr 2026" />
-      </div>
-      <div class="form-row">
-        <label>Receipt Text</label>
-        <textarea id="rText" placeholder="Milk 2%             1.29&#10;Bread whole wheat    1.99&#10;Orange juice 1L      2.49&#10;Total               5.77">${esc(prefillText)}</textarea>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="doParseAndSave()">Parse &amp; Save</button>
-        <button class="btn btn-ghost" onclick="doClear()">Clear</button>
-      </div>
-      <div id="parseResult" class="parse-result"></div>
-    </div>
-  `;
-}
-
-function doParseAndSave(){
-  const name = document.getElementById('rName').value.trim() || ('Receipt ' + new Date().toLocaleDateString('en-GB'));
-  const text = document.getElementById('rText').value;
-  if(!text.trim()){ toast('Please paste some receipt text first'); return; }
-
-  const {items, total} = parseReceiptText(text);
-  if(!items.length){
-    document.getElementById('parseResult').innerHTML = `<div class="parse-notice warn">⚠ Could not find any priced items. Make sure each line ends with a price like 1.99</div>`;
-    return;
-  }
-
-  const id = rid();
-  receipts[id] = { id, name, date: Date.now(), raw: text, items, total };
-  save();
-  activeId = id;
-  renderSidebar();
-  renderDetailView(id);
-  toast('Receipt saved — ' + items.length + ' items');
-}
-
-function doClear(){
-  renderPasteView();
-}
-
-function selectReceipt(id){
-  activeId = id;
-  renderSidebar();
-  renderDetailView(id);
-}
-
-function renderDetailView(id){
-  const r = receipts[id];
-  if(!r){ showNew(); return; }
-  const date = new Date(r.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
-  const rows = (r.items||[]).map(item=>`
-    <tr>
-      <td>${esc(item.name)}</td>
-      <td class="qty">${item.qty>1?item.qty:'—'}</td>
-      <td class="price">${fmt(item.price)}</td>
-    </tr>
-  `).join('');
-
-  document.getElementById('main').innerHTML = `
-    <div class="detail-view">
-      <div class="detail-header">
-        <div>
-          <h2>${esc(r.name||'Receipt')}</h2>
-          <div class="detail-meta">${date} · ${r.items?.length||0} items</div>
-        </div>
-        <div class="btn-row">
-          <button class="btn btn-ghost" onclick="showNew()">＋ New</button>
-          <button class="btn btn-danger" onclick="deleteReceipt('${id}')">Delete</button>
-        </div>
-      </div>
-      <div class="detail-body">
-        <table class="receipt-table">
-          <thead><tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Price</th></tr></thead>
-          <tbody>
-            ${rows}
-            <tr class="receipt-total-row">
-              <td colspan="2"><strong>Total</strong></td>
-              <td class="price"><strong>${fmt(r.total)}</strong></td>
-            </tr>
-          </tbody>
-        </table>
-        <span class="raw-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'Hide raw text':'Show raw text'">Show raw text</span>
-        <div class="raw-box">${esc(r.raw||'')}</div>
-      </div>
-    </div>
-  `;
-}
-
-function deleteReceipt(id){
-  if(!confirm('Delete this receipt?')) return;
-  delete receipts[id];
-  save();
-  activeId = null;
-  renderSidebar();
-  renderEmptyState();
-  toast('Receipt deleted');
-}
-
-function renderEmptyState(){
-  document.getElementById('main').innerHTML = `
-    <div class="empty-state">
-      <div class="empty-icon">🧾</div>
-      <h3>No receipt selected</h3>
-      <p>Choose a receipt from the list or click <strong>+ New Receipt</strong> to paste one.</p>
-    </div>
-  `;
-}
-
-function init(){
-  receipts = load();
-  const entries = Object.entries(receipts).sort((a,b)=>(b[1].date||0)-(a[1].date||0));
-  renderSidebar();
-  if(entries.length){
-    activeId = entries[0][0];
-    renderDetailView(activeId);
-    renderSidebar();
-  } else {
-    renderPasteView();
-  }
-}
-
-init();
-</script>
-</body>
-</html>
+/* ── ANALYTICS VIEW ── */
+.analytics-view{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.analytics-header{padding:14px 28px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.analytics-header h2{font-size:1rem;font-weight:700;flex:1}
+.analytics-tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:3px}
+.atab{padding:5px 14px;border:none;background:none;border-radius:6px;font-size:.78rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s}
+.atab.active{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.analytics-body{flex:1;overflow-y:auto;padding:20px 28px}
+.analytics-section{margin-bottom:28px}
+.analytics-section h3{font-size:.85rem;font-weight:700;margin-bottom:14px;color:var(--text)}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.stat-val{font-size:1.4rem;font-weight:700;color:var(--accent);line-height:1}
+.stat-lbl{font-size:.72rem;color:var(--text-muted);margin-top:4px}
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:.78rem}
+.bar-label{width:130px;text-align:right;color:var(--text);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:20px;background:var(--surface);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s}
+.bar-value{width:56px;t
