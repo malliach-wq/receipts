@@ -519,7 +519,7 @@ if(idx>=0)receipts[idx]=editBackup;save();
 editBackup=null;showDetail(currentId);
 }else{
 editBackup=null;
-if(receipts.length)showDetail(receipts[0].id);else showView('view-upload');
+showUpload();
 }
 }
 function showUpload(){_scannedImageUrl=null;currentId=null;renderSidebar();showView('view-upload');}
