@@ -771,6 +771,14 @@ renderIE();
 function ieMouseUp(){_ieDrag=null;}
 async function proceedToOCR(){
 if(!_ieOrigCanvas){showUpload();return;}
+// Auto-apply any drawn crop rect before scanning
+if(_ieCropRect&&_ieCropRect.w>10&&_ieCropRect.h>10){
+const r=_ieCropRect;
+const cropped=document.createElement('canvas');
+cropped.width=Math.round(r.w);cropped.height=Math.round(r.h);
+cropped.getContext('2d').drawImage(_ieOrigCanvas,r.x,r.y,r.w,r.h,0,0,r.w,r.h);
+_ieOrigCanvas=cropped;_ieCropRect=null;_ieCropping=false;
+}
 const final=document.createElement('canvas');
 final.width=_ieOrigCanvas.width;final.height=_ieOrigCanvas.height;
 const ctx=final.getContext('2d');
