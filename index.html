@@ -274,7 +274,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="field-group"><label>Subtotal</label><input type="number" id="f-subtotal" step="0.01" min="0" placeholder="0.00"></div>
             <div class="field-group"><label>Tax</label><input type="number" id="f-tax" step="0.01" min="0" placeholder="0.00"></div>
             <div class="field-group"><label>Tip</label><input type="number" id="f-tip" step="0.01" min="0" placeholder="0.00"></div>
-            <div class="field-group"><label>Total</label><input type="number" id="f-total" step="0.01" min="0" placeholder="0.00"></div>
+            <div class="field-group"><label>Total</label><input type="number" id="f-total" step="0.01" min="0" placeholder="0.00" oninput="updateItemsTotal()"></div>
           </div>
         </div>
         <div class="field-row">
@@ -309,6 +309,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           </tr></tfoot>
         </table>
         <button class="add-row-btn" onclick="addItemRow()">+ Add Item</button>
+<div id="recon-bar" style="display:none;padding:6px 10px;border-radius:6px;font-size:.78rem;margin-top:6px;"></div>
         <div id="raw-section" style="display:none;margin-top:8px">
           <span class="raw-toggle" onclick="document.getElementById('raw-box-edit').classList.toggle('open')">Show / hide OCR text</span>
           <div class="raw-box" id="raw-box-edit"></div>
@@ -808,12 +809,24 @@ function addItemRow(item){
 }
 
 function updateItemsTotal(){
-  const rows=[...document.querySelectorAll('#items-body tr')];
-  const total=rows.reduce((s,tr)=>{
-    const v=parseFloat(tr.querySelectorAll('input')[4]?.value)||0;
-    return s+v;
-  },0);
-  document.getElementById('items-total-display').textContent=fmt(total);
+const rows=[...document.querySelectorAll('#items-body tr')];
+const itemsSum=parseFloat(rows.reduce((s,tr)=>{
+const v=parseFloat(tr.querySelectorAll('input')[4]?.value)||0;
+return s+v;
+},0).toFixed(2));
+document.getElementById('items-total-display').textContent=fmt(itemsSum);
+const receiptTotal=parseFloat(parseFloat(document.getElementById('f-total')?.value||0).toFixed(2));
+const recon=document.getElementById('recon-bar');
+if(!recon)return;
+if(rows.length===0||receiptTotal===0){recon.style.display='none';return;}
+const diff=Math.abs(itemsSum-receiptTotal);
+if(diff<0.02){
+recon.style.display='';recon.style.background='#e6f9ed';recon.style.border='1px solid #1a6e38';
+recon.innerHTML='<span style="color:#1a6e38">✓ Items total matches receipt total ('+fmt(itemsSum)+')</span>';
+}else{
+recon.style.display='';recon.style.background='#fff5f5';recon.style.border='1px solid #c53030';
+recon.innerHTML='<span style="color:#c53030">⚠ Items '+fmt(itemsSum)+' ≠ receipt total '+fmt(receiptTotal)+' — please check line items</span>';
+}
 }
 
 function readItemRows(){
