@@ -193,6 +193,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .zpct{font-size:.75rem;min-width:34px;text-align:center;color:var(--text);}
 .scan-scroll{flex:1;overflow:auto;padding:10px;display:flex;justify-content:center;align-items:flex-start;}
 #scan-img{transform-origin:top center;max-width:none;display:block;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.15);}
+
+.view.hidden{display:none!important;}
+.scan-scroll{cursor:grab;}
+.ie-header{padding:12px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ie-header h2{font-size:1rem;font-weight:700;}
+.ie-toolbar{display:flex;align-items:center;gap:14px;padding:10px 24px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;background:var(--surface);}
+.ie-tool-group{display:flex;align-items:center;gap:8px;}
+.ie-tool-lbl{font-size:.76rem;font-weight:600;color:var(--text-muted);white-space:nowrap;}
+.ie-tool-val{font-size:.76rem;min-width:32px;text-align:right;color:var(--text);font-weight:600;}
+#ie-canvas-wrap{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#1e1e1e;position:relative;}
+#ie-canvas{display:block;box-shadow:0 4px 24px rgba(0,0,0,.4);}
+.ie-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:.73rem;padding:5px 14px;border-radius:99px;pointer-events:none;white-space:nowrap;}
+#ie-crop-btn.active{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important;}
+input[type=range]{width:130px;accent-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -442,6 +456,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </main>
 </div>
+<!-- IMAGE EDITOR -->
+<div class="view hidden" id="view-image-edit">
+<div class="ie-header">
+<h2>&#x1F5BC;&#xFE0F; Prepare Receipt Image</h2>
+<div class="btn-row">
+<button class="btn btn-ghost btn-sm" onclick="cancelImageEdit()">Cancel</button>
+<button class="btn btn-primary btn-sm" onclick="proceedToOCR()">Scan Receipt &#x2192;</button>
+</div>
+</div>
+<div class="ie-toolbar">
+<div class="ie-tool-group">
+<span class="ie-tool-lbl">Brightness</span>
+<input type="range" id="ie-brightness" min="-100" max="100" value="0" oninput="updateIEBrightness()">
+<span class="ie-tool-val" id="ie-brightness-val">0</span>
+</div>
+<div class="ie-tool-group">
+<span class="ie-tool-lbl">Contrast</span>
+<input type="range" id="ie-contrast" min="-100" max="100" value="0" oninput="updateIEContrast()">
+<span class="ie-tool-val" id="ie-contrast-val">0</span>
+</div>
+<div style="flex:1"></div>
+<button id="ie-crop-btn" class="btn btn-ghost btn-sm" onclick="toggleCropMode()">&#x2702; Crop</button>
+<button class="btn btn-ghost btn-sm" onclick="resetImageEdit()">&#x21BA; Reset</button>
+</div>
+<div id="ie-canvas-wrap">
+<canvas id="ie-canvas"
+onmousedown="ieMouseDown(event)"
+onmousemove="ieMouseMove(event)"
+onmouseup="ieMouseUp(event)"></canvas>
+<div class="ie-hint" id="ie-hint">Adjust brightness/contrast &bull; Click &#x2702;&nbsp;Crop then drag to crop &bull; Click Apply Crop to confirm</div>
+</div>
+</div>
 <!-- DUPLICATE MODAL -->
 <div class="modal-overlay hidden" id="dup-modal">
   <div class="modal-box">
@@ -482,6 +528,8 @@ let _editTags=[];
 let _scannedImageUrl=null;
 let _imgZoom=1;
 
+let _ieFile=null,_ieOrigCanvas=null,_ieBright=0,_ieCont=0,_ieCropping=false,_ieCropRect=null,_ieDispScale=1,_ieDrag=null;
+
 // ===== STORAGE =====
 function load(){try{receipts=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch(e){receipts=[];}}
 function save(){localStorage.setItem(STORE_KEY,JON.stringify(receipts));}
@@ -503,7 +551,7 @@ function extractUnitSize(name){
 }
 
 // ===== VIEW ROUTING =====
-const ALL_VIEWS=['view-upload','view-ocr','view-edit','view-detail','view-analytics','view-item-search','view-roadmap'];
+const ALL_VIEWS=['view-upload','view-ocr','view-edit','view-detail','view-analytics','view-item-search','view-roadmap','view-image-edit'];
 function showView(id){ALL_VIEWS.forEach(v=>{const el=document.getElementById(v);if(el)el.classList.toggle('hidden',v!==id);});}
 // ===== INIT =====
 load();
@@ -566,40 +614,40 @@ function renderSidebar(filter){
 }
 
 // ===== FILE HANDLING =====
-function handleFile(f){if(f)runOCR(f);}
+function handleFile(f){if(f)showImageEditor(f);}
 function handleDrop(e){
-  e.preventDefault();
-  document.getElementById('drop-zone').classList.remove('drag-over');
-  const f=e.dataTransfer.files[0];
-  if(f&&(f.type.startsWith('image/')||f.type==='application/pdf'))runOCR(f);
+e.preventDefault();
+document.getElementById('drop-zone').classList.remove('drag-over');
+const f=e.dataTransfer.files[0];
+if(f&&(f.type.startsWith('image/')||f.type==='application/pdf'))showImageEditor(f);
 }
 
 // ===== PDF SUPPORT =====
 async function pdfToCanvas(file){
-  if(typeof pdfjsLib==='undefined')throw new Error('PDF.js not available');
-  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  const ab=await file.arrayBuffer();
-  const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-  const page=await pdf.getPage(1);
-  const vp=page.getViewport({scale:2.5});
-  const canvas=document.createElement('canvas');
-  canvas.width=vp.width;canvas.height=vp.height;
-  await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
-  return canvas;
+if(typeof pdfjsLib==='undefined')throw new Error('PDF.js not available');
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const ab=await file.arrayBuffer();
+const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+const page=await pdf.getPage(1);
+const vp=page.getViewport({scale:2.5});
+const canvas=document.createElement('canvas');
+canvas.width=vp.width;canvas.height=vp.height;
+await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+return canvas;
 }
 
 async function fileToCanvas(file){
-  return new Promise((res,rej)=>{
-    const img=new Image();
-    const url=URL.createObjectURL(file);
-    img.onload=()=>{
-      const c=document.createElement('canvas');
-      c.width=img.naturalWidth;c.height=img.naturalHeight;
-      c.getContext('2d').drawImage(img,0,0);
-      URL.revokeObjectURL(url);res(c);
-    };
-    img.onerror=rej;img.src=url;
-  });
+return new Promise((res,rej)=>{
+const img=new Image();
+const url=URL.createObjectURL(file);
+img.onload=()=>{
+const c=document.createElement('canvas');
+c.width=img.naturalWidth;c.height=img.naturalHeight;
+c.getContext('2d').drawImage(img,0,0);
+URL.revokeObjectURL(url);res(c);
+};
+img.onerror=rej;img.src=url;
+});
 }
 function cropToContent(canvas){
 const w=canvas.width,h=canvas.height;
@@ -631,57 +679,148 @@ return out;
 }
 
 // ===== OCR =====
-async function runOCR(file){
-  showView('view-ocr');
-  const lbl=document.getElementById('ocr-label');
-  const bar=document.getElementById('prog-bar');
-  try{
-    lbl.textContent='Preparing image...';bar.style.width='5%';
-    let canvas;
-    if(file.type==='application/pdf'){
-      lbl.textContent='Rendering PDF...';bar.style.width='8%';
-      canvas=await pdfToCanvas(file);
-    }else{
-      canvas=await fileToCanvas(file);
-    }
-    lbl.textContent='Cropping to receipt...';bar.style.width='14%';
-    canvas=cropToContent(canvas);
-    _scannedImageUrl=canvas.toDataURL('image/jpeg',0.88);
-    lbl.textContent='Loading OCR engine...';bar.style.width='18%';
-    const{data:{text}}=await Tesseract.recognize(canvas,'eng',{
-      workerPath:'https://unpkg.com/tesseract.js@4.1.1/dist/worker.min.js',
-      corePath:'https://unpkg.com/tesseract.js-core@4.0.1/',
-      langPath:'https://tessdata.projectnaptha.com/4.0.0',
-      logger:m=>{
-        if(m.status==='recognizing text'){
-          bar.style.width=(18+m.progress*82)+'%';
-          lbl.textContent='Reading text... '+Math.round(m.progress*100)+'%';
-        }else{lbl.textContent=m.status;}
-      }
-    });
-    const parsed=parseReceiptText(text);
-    populateEditForm(parsed,text);
-    showView('view-edit');
-    renderScannedImage();
-  }catch(err){
-    toast('OCR failed: '+err.message);
-    showUpload();
-  }
+async function showImageEditor(file){
+_ieFile=file;_ieBright=0;_ieCont=0;_ieCropRect=null;_ieCropping=false;_ieDrag=null;
+const bi=document.getElementById('ie-brightness');if(bi)bi.value=0;
+const ci=document.getElementById('ie-contrast');if(ci)ci.value=0;
+const bv=document.getElementById('ie-brightness-val');if(bv)bv.textContent='0';
+const cv=document.getElementById('ie-contrast-val');if(cv)cv.textContent='0';
+const cb=document.getElementById('ie-crop-btn');if(cb){cb.classList.remove('active');cb.textContent='✂ Crop';}
+showView('view-image-edit');
+await new Promise(r=>requestAnimationFrame(r));
+try{
+_ieOrigCanvas=file.type==='application/pdf'?await pdfToCanvas(file):await fileToCanvas(file);
+renderIE();
+}catch(e){toast('Could not load image: '+e.message);showUpload();}
+}
+function renderIE(){
+const wrap=document.getElementById('ie-canvas-wrap');
+const canvas=document.getElementById('ie-canvas');
+if(!_ieOrigCanvas||!canvas||!wrap)return;
+const avW=wrap.clientWidth-40,avH=wrap.clientHeight-100;
+const sc=Math.min(1,avW/_ieOrigCanvas.width,avH/_ieOrigCanvas.height);
+_ieDispScale=sc;
+canvas.width=Math.round(_ieOrigCanvas.width*sc);
+canvas.height=Math.round(_ieOrigCanvas.height*sc);
+const ctx=canvas.getContext('2d');
+const b=1+_ieBright/100,c=_ieCont>=0?1+_ieCont/100:(100+_ieCont)/100;
+ctx.filter='brightness('+b+') contrast('+c+')';
+ctx.drawImage(_ieOrigCanvas,0,0,canvas.width,canvas.height);
+ctx.filter='none';
+if(_ieCropRect){
+const r=_ieCropRect,s=_ieDispScale;
+ctx.save();
+ctx.fillStyle='rgba(0,0,0,0.45)';ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.filter='brightness('+b+') contrast('+c+')';
+ctx.drawImage(_ieOrigCanvas,r.x,r.y,r.w,r.h,r.x*s,r.y*s,r.w*s,r.h*s);
+ctx.filter='none';
+ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([6,3]);
+ctx.strokeRect(r.x*s,r.y*s,r.w*s,r.h*s);
+ctx.restore();
+}
+}
+function updateIEBrightness(){
+_ieBright=parseInt(document.getElementById('ie-brightness').value);
+document.getElementById('ie-brightness-val').textContent=(_ieBright>0?'+':'')+_ieBright;
+renderIE();
+}
+function updateIEContrast(){
+_ieCont=parseInt(document.getElementById('ie-contrast').value);
+document.getElementById('ie-contrast-val').textContent=(_ieCont>0?'+':'')+_ieCont;
+renderIE();
+}
+function toggleCropMode(){
+if(_ieCropping&&_ieCropRect&&_ieCropRect.w>10&&_ieCropRect.h>10){
+const r=_ieCropRect;
+const out=document.createElement('canvas');
+out.width=Math.round(r.w);out.height=Math.round(r.h);
+out.getContext('2d').drawImage(_ieOrigCanvas,r.x,r.y,r.w,r.h,0,0,r.w,r.h);
+_ieOrigCanvas=out;_ieCropRect=null;
+}
+_ieCropping=!_ieCropping;_ieCropRect=null;_ieDrag=null;
+const cb=document.getElementById('ie-crop-btn');
+if(cb){cb.classList.toggle('active',_ieCropping);cb.textContent=_ieCropping?'Apply Crop':'✂ Crop';}
+const canvas=document.getElementById('ie-canvas');
+if(canvas)canvas.style.cursor=_ieCropping?'crosshair':'default';
+renderIE();
+}
+function resetImageEdit(){
+_ieBright=0;_ieCont=0;_ieCropRect=null;_ieCropping=false;_ieDrag=null;
+document.getElementById('ie-brightness').value=0;document.getElementById('ie-contrast').value=0;
+document.getElementById('ie-brightness-val').textContent='0';document.getElementById('ie-contrast-val').textContent='0';
+const cb=document.getElementById('ie-crop-btn');if(cb){cb.classList.remove('active');cb.textContent='✂ Crop';}
+const canvas=document.getElementById('ie-canvas');if(canvas)canvas.style.cursor='default';
+const f=_ieFile;_ieOrigCanvas=null;showImageEditor(f);
+}
+function cancelImageEdit(){_ieOrigCanvas=null;_ieFile=null;showUpload();}
+function ieMouseDown(e){
+if(!_ieCropping)return;
+const canvas=document.getElementById('ie-canvas');
+const rect=canvas.getBoundingClientRect();
+const mx=(e.clientX-rect.left)/_ieDispScale,my=(e.clientY-rect.top)/_ieDispScale;
+_ieDrag={x:mx,y:my};_ieCropRect={x:mx,y:my,w:0,h:0};e.preventDefault();
+}
+function ieMouseMove(e){
+if(!_ieCropping||!_ieDrag)return;
+const canvas=document.getElementById('ie-canvas');
+const rect=canvas.getBoundingClientRect();
+const cx=(e.clientX-rect.left)/_ieDispScale,cy=(e.clientY-rect.top)/_ieDispScale;
+_ieCropRect={x:Math.max(0,Math.min(_ieDrag.x,cx)),y:Math.max(0,Math.min(_ieDrag.y,cy)),w:Math.abs(cx-_ieDrag.x),h:Math.abs(cy-_ieDrag.y)};
+renderIE();
+}
+function ieMouseUp(){_ieDrag=null;}
+async function proceedToOCR(){
+if(!_ieOrigCanvas){showUpload();return;}
+const final=document.createElement('canvas');
+final.width=_ieOrigCanvas.width;final.height=_ieOrigCanvas.height;
+const ctx=final.getContext('2d');
+const b=1+_ieBright/100,c=_ieCont>=0?1+_ieCont/100:(100+_ieCont)/100;
+ctx.filter='brightness('+b+') contrast('+c+')';
+ctx.drawImage(_ieOrigCanvas,0,0);ctx.filter='none';
+_ieOrigCanvas=null;
+runOCROnCanvas(final);
+}
+async function runOCROnCanvas(canvas){
+showView('view-ocr');
+const lbl=document.getElementById('ocr-label');
+const bar=document.getElementById('prog-bar');
+try{
+_scannedImageUrl=canvas.toDataURL('image/jpeg',0.92);
+lbl.textContent='Loading OCR engine...';bar.style.width='18%';
+const{data:{text}}=await Tesseract.recognize(canvas,'eng',{
+workerPath:'https://unpkg.com/tesseract.js@4.1.1/dist/worker.min.js',
+corePath:'https://unpkg.com/tesseract.js-core@4.0.1/',
+langPath:'https://tessdata.projectnaptha.com/4.0.0',
+logger:m=>{
+if(m.status==='recognizing text'){
+bar.style.width=(18+m.progress*82)+'%';
+lbl.textContent='Reading text... '+Math.round(m.progress*100)+'%';
+}else{lbl.textContent=m.status;}
+}
+});
+const parsed=parseReceiptText(text);
+populateEditForm(parsed,text);
+showView('view-edit');
+renderScannedImage();
+}catch(err){
+toast('OCR failed: '+err.message);
+showUpload();
+}
 }
 
-
 function renderScannedImage(){
-  const panel=document.getElementById('scan-panel');
-  const img=document.getElementById('scan-img');
-  if(!panel)return;
-  if(!_scannedImageUrl){panel.classList.remove('visible');return;}
-  img.src=_scannedImageUrl;
-  panel.classList.add('visible');
-  img.onload=()=>{
-    const scroll=document.getElementById('scan-scroll');
-    _imgZoom=scroll&&img.naturalWidth>0?Math.min(1,(scroll.clientWidth-24)/img.naturalWidth):1;
-    applyZoom();
-  };
+const panel=document.getElementById('scan-panel');
+const img=document.getElementById('scan-img');
+if(!panel)return;
+if(!_scannedImageUrl){panel.classList.remove('visible');return;}
+img.src=_scannedImageUrl;
+panel.classList.add('visible');
+initScanPan();
+img.onload=()=>{
+const scroll=document.getElementById('scan-scroll');
+_imgZoom=scroll&&img.naturalWidth>0?Math.min(1,(scroll.clientWidth-24)/img.naturalWidth):1;
+applyZoom();
+};
 }
 function applyZoom(){
   const img=document.getElementById('scan-img');
@@ -697,6 +836,20 @@ function zoomReset(){
   applyZoom();
 }
 function handleScanWheel(e){e.preventDefault();if(e.deltaY<0)zoomIn();else zoomOut();}
+
+function initScanPan(){
+const scroll=document.getElementById('scan-scroll');
+if(!scroll||scroll._panInit)return;
+scroll._panInit=true;
+let drag=null;
+scroll.addEventListener('mousedown',e=>{
+if(e.button!==0)return;
+drag={x:e.clientX+scroll.scrollLeft,y:e.clientY+scroll.scrollTop};
+scroll.style.cursor='grabbing';e.preventDefault();
+});
+window.addEventListener('mousemove',e=>{if(!drag)return;scroll.scrollLeft=drag.x-e.clientX;scroll.scrollTop=drag.y-e.clientY;});
+window.addEventListener('mouseup',()=>{if(drag){drag=null;scroll.style.cursor='grab';}});
+}
 
 // ===== TEXT PARSING =====
 function parseReceiptText(text){
