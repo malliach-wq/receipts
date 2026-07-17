@@ -609,8 +609,7 @@ function cropToContent(canvas,bg=220){
   const oy0=Math.max(0,Math.round((y0-pad)/sc));
   const ox1=Math.min(w,Math.round((x1+pad)/sc));
   const oy1=Math.min(h,Math.round((y1+pad)/sc));
-  if(ox0<w*0.05&&oy0<h*0.05&&ox1>w*0.95&&oy1>h*0.95)return canvas;
-  const out=document.createElement('canvas');
+    const out=document.createElement('canvas');
   out.width=ox1-ox0;out.height=oy1-oy0;
   out.getContext('2d').drawImage(canvas,ox0,oy0,out.width,out.height,0,0,out.width,out.height);
   return out;
@@ -705,7 +704,7 @@ function parseReceiptText(text){
   let subtotal=0,tax=0,tip=0,total=0;
   const items=[];
   const itemRe=/^(.+?)\s+(\d+)?\s*[xX@]?\s*\$?(\d+\.?\d*)\s+\$?(\d+\.\d{2})$/;
-  const priceRe=/^(.+?)\s+\$?(\d+\.\d{2})$/;
+  const priceRe=/^(.+?)\s+\$?(\d+\.\d{2})\s*[A-Za-z*]?$/;
   for(const l of lines){
     if(/subtotal|sub[\s\-]?total/i.test(l)){const m=l.match(/\$?(\d+\.\d{1,2})/);if(m)subtotal=parseFloat(m[1]);continue;}
     if(/\btax\b|hst|gst|pst|vat/i.test(l)){const m=l.match(/\$?(\d+\.\d{1,2})/);if(m)tax=parseFloat(m[1]);continue;}
