@@ -81,16 +81,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .items-table td,.receipt-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);}
 .items-table input,.items-table select{width:100%;padding:3px 5px;border:1px solid transparent;border-radius:4px;font-size:.8rem;font-family:inherit;background:transparent;}
 .items-table input:focus,.items-table select:focus{border-color:var(--accent);outline:none;background:var(--surface);}
-.col-name{width:22%;overflow:hidden;}
-.col-unit{width:11%;}
+.col-name{width:28%;overflow:hidden;}
+.col-unit{width:10%;}
 .col-qty{width:7%;}
-.col-price{width:12%;}
+.col-price{width:13%;}
 .col-cat{width:14%;}
 .col-disc{width:5%;text-align:center;}
 .col-del{width:4%;}
 .disc-check{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
 .del-btn{background:none;border:none;color:#ccc;font-size:1rem;cursor:pointer;padding:0 4px;}
-.del-btn:hover{color:#e53e3e;}
+.del-btn:hover{color:#e53e3e;}.items-total-label{text-align:right;font-weight:600;color:var(--text-muted);padding-right:12px!important;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;}.items-total-val{font-weight:700;color:var(--accent);padding-left:4px;}
 .add-row-btn{margin-top:8px;font-size:.78rem;color:var(--accent);background:none;border:1.5px dashed var(--border);border-radius:6px;padding:5px 14px;cursor:pointer;transition:all .15s;}
 .add-row-btn:hover{border-color:var(--accent);background:var(--accent-light);}
 .total-row td{font-weight:700;font-size:.82rem;}
@@ -303,15 +303,20 @@ input[type=range]{width:130px;accent-color:var(--accent);}
         <table class="items-table" id="items-table">
           <thead><tr>
             <th class="col-name">Item</th>
+            <th class="col-cat">Category</th>
             <th class="col-unit">Size/Unit</th>
             <th class="col-qty">Qty</th>
             <th class="col-price">Unit <span class="curr-sym">€</span></th>
             <th class="col-price">Total <span class="curr-sym">€</span></th>
-            <th class="col-cat">Category</th>
             <th class="col-disc" title="On sale / discounted?">&#x1F4B0;</th>
             <th class="col-del"></th>
           </tr></thead>
           <tbody id="items-body"></tbody>
+          <tfoot><tr>
+            <td colspan="5" class="items-total-label">Items Total</td>
+            <td class="items-total-val" id="items-total-cell">€0.00</td>
+            <td colspan="2"></td>
+          </tr></tfoot>
           <tfoot><tr class="total-row">
             <td colspan="4" style="text-align:right;color:var(--text-muted);font-size:.78rem">ITEMS TOTAL</td>
             <td id="items-total-display" style="text-align:right;color:var(--accent)">$0.00</td>
@@ -1065,6 +1070,7 @@ function populateEditForm(parsed,rawText){
   document.getElementById('edit-title').textContent='New Receipt';
 }
 
+function recalcLine(inp){const tr=inp.closest('tr');const qty=parseFloat(tr.querySelector('.col-qty input').value)||0;const up=parseFloat(tr.querySelectorAll('.col-price input')[0].value)||0;tr.querySelectorAll('.col-price input')[1].value=(qty*up).toFixed(2);updateItemsTotal();}
 function addItemRow(item){
   item=item||{id:uid(),name:'',unitSize:'',qty:1,unitPrice:0,lineTotal:0,category:'other',isDiscounted:false,originalPrice:null};
   const tbody=document.getElementById('items-body');
@@ -1073,11 +1079,11 @@ function addItemRow(item){
   const catOpts=CATS.map(c=>`<option value="${c}"${c===item.category?' selected':''}>${c}</option>`).join('');
   tr.innerHTML=`
     <td class="col-name"><input type="text" value="${esc(item.name)}" placeholder="Item name" oninput="updateItemsTotal()"></td>
-    <td class="col-unit"><input type="text" value="${esc(item.unitSize||'')}" placeholder="e.g. 250ml"></td>
-    <td class="col-qty"><input type="number" value="${item.qty||1}" min="0" step="0.01" style="width:44px" oninput="updateItemsTotal()"></td>
-    <td class="col-price"><input type="number" value="${(item.unitPrice||0).toFixed(2)}" min="0" step="0.01" oninput="updateItemsTotal()"></td>
-    <td class="col-price"><input type="number" value="${(item.lineTotal||0).toFixed(2)}" min="0" step="0.01" oninput="updateItemsTotal()"></td>
     <td class="col-cat"><select>${catOpts}</select></td>
+    <td class="col-unit"><input type="text" value="${esc(item.unitSize||'')}" placeholder="e.g. 250ml"></td>
+    <td class="col-qty"><input type="number" value="${item.qty||1}" min="0" step="0.01" oninput="recalcLine(this)"></td>
+    <td class="col-price"><input type="number" value="${(item.unitPrice||0).toFixed(2)}" min="0" step="0.01" oninput="recalcLine(this)"></td>
+    <td class="col-price"><input type="number" value="${(item.lineTotal||0).toFixed(2)}" min="0" step="0.01" oninput="updateItemsTotal()"></td>
     <td class="col-disc"><input type="checkbox type="checkbox" class="disc-check"${item.isDiscounted?' checked':''}></td>
     <td class="col-del"><button class="del-btn" onclick="this.closest('tr').remove();updateItemsTotal()">&#x2715;</button></td>`;
   tbody.appendChild(tr);
@@ -1098,6 +1104,7 @@ if(rows.length===0||receiptTotal===0){recon.style.display='none';return;}
 const diff=Math.abs(itemsSum-receiptTotal);
 if(diff<0.02){
 recon.style.display='';recon.style.background='#e6f9ed';recon.style.border='1px solid #1a6e38';
+const _itc=document.getElementById('items-total-cell');if(_itc)_itc.textContent=fmt(itemsSum);
 recon.innerHTML='<span style="color:#1a6e38">✓ Items total matches receipt total ('+fmt(itemsSum)+')</span>';
 }else{
 recon.style.display='';recon.style.background='#fff5f5';recon.style.border='1px solid #c53030';
