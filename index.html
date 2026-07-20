@@ -290,7 +290,7 @@ input[type=range]{width:130px;accent-color:var(--accent);}
           </div>
           <div class="field-group">
             <label>Currency</label>
-            <select id="f-currency">
+            <select id="f-currency" onchange="updateCurrSymbols()">
               <option value="EUR">€ EUR</option>
               <option value="USD">$ USD</option>
               <option value="GBP">£ GBP</option>
@@ -305,7 +305,7 @@ input[type=range]{width:130px;accent-color:var(--accent);}
             <th class="col-name">Item</th>
             <th class="col-unit">Size/Unit</th>
             <th class="col-qty">Qty</th>
-            <th class="col-price">Unit $</th>
+            <th class="col-price">Unit <span class="curr-sym">€</span></th>
             <th class="col-price">Total $</th>
             <th class="col-cat">Category</th>
             <th class="col-disc" title="On sale / discounted?">&#x1F4B0;</th>
@@ -555,7 +555,15 @@ function save(){localStorage.setItem(STORE_KEY,JON.stringify(receipts));}
 // ===== UTILS =====
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function fmt(n){return '$'+(parseFloat(n)||0).toFixed(2);}
+function getCurrSym(){
+  const v=(document.getElementById('f-currency')||{value:'EUR'}).value||'EUR';
+  return{EUR:'€',USD:'$',GBP:'£',CHF:'CHF ',AED:'AED '}[v]||'€';
+}
+function updateCurrSymbols(){
+  const sym=getCurrSym();
+  document.querySelectorAll('.curr-sym').forEach(el=>el.textContent=sym);
+}
+function fmt(n){return getCurrSym()+(parseFloat(n)||0).toFixed(2);}
 function toast(msg,dur){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),dur||3000);}
 function normalizeKey(name,unit){return((name||'')+' '+(unit||'')).toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim().slice(0,48);}
 function guessCategory(name){
@@ -1041,6 +1049,7 @@ function populateEditForm(parsed,rawText){
   document.getElementById('f-vat').value=parsed.vatNumber||'';
   const _fCurr=document.getElementById('f-currency');
   if(_fCurr){const _cv=parsed.currency||'EUR';for(const _o of _fCurr.options)_o.selected=_o.value===_cv;}
+  updateCurrSymbols();
   _editTags=[...(parsed.tags||[])];
   renderTagsInForm();
   const tbody=document.getElementById('items-body');
