@@ -899,7 +899,7 @@ function parseReceiptText(text) {
   const countryMap={'ITALIA':'Italy','ITALY':'Italy','FRANCE':'France','FRANKRIJK':'France','ESPAÑA':'Spain','SPAIN':'Spain','DEUTSCHLAND':'Germany','GERMANY':'Germany','UNITED KINGDOM':'United Kingdom','UK':'United Kingdom','PORTUGAL':'Portugal','NETHERLANDS':'Netherlands','NEDERLAND':'Netherlands','BELGIQUE':'Belgium','BELGIUM':'Belgium','SCHWEIZ':'Switzerland','SWITZERLAND':'Switzerland'};
   for(let _ci=1;_ci<Math.min(lines.length,10);_ci++){
     const _cl=lines[_ci].trim();
-    if(!_cl||priceAtEnd(_cl))continue;
+    if(!_cl||/\d+[.,]\d{2}\s*$/.test(_cl))continue;
     // Via/Corso/Piazza → extract city after postal code or comma
     const _addrM=_cl.match(/^(?:via|corso|piazza|viale|vicolo|strada|largo|rue|avenue|boulevard|calle|carrer|strasse|straße)s+.+,s*(?:d{4,5}s+)?(.+)$/i);
     if(_addrM&&!city){city=_addrM[1].replace(/d{4,5}/,'').trim();continue;}
