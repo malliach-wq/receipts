@@ -284,6 +284,16 @@ input[type=range]{width:130px;accent-color:var(--accent);}
         </div>
         
         <div class="field-row">
+          <div class="field-group">
+            <label>City</label>
+            <input type="text" id="f-city" placeholder="e.g. Milan">
+          </div>
+          <div class="field-group">
+            <label>Country</label>
+            <input type="text" id="f-country" placeholder="e.g. Italy">
+          </div>
+        </div>
+        <div class="field-row">
           <div class="field-group" style="flex:2">
             <label>VAT Number</label>
             <input type="text" id="f-vat" placeholder="e.g. MT12345678">
@@ -880,9 +890,26 @@ window.addEventListener('mouseup',()=>{if(drag){drag=null;scroll.style.cursor='g
 // ===== TEXT PARSING =====
 function parseReceiptText(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  if (!lines.length) return {store:'',purchaseDate:'',vatNumber:'',currency:'EUR',total:0,subtotal:0,tax:0,tip:0,items:[]};
+  if (!lines.length) return {store:'',purchaseDate:'',city:'',country:'',vatNumber:'',currency:'EUR',total:0,subtotal:0,tax:0,tip:0,items:[]};
 
   const store = (lines[0]||'').replace(/[$]/g,'S').replace(/[0](?=[a-zA-Z])/g,'O').replace(/\bTt([a-z])/g,'It$1').trim(); // Line 0 is ALWAYS the store name
+
+  // === CITY / COUNTRY extraction (from header lines 1-8) ===
+  let city='',country='';
+  const countryMap={'ITALIA':'Italy','ITALY':'Italy','FRANCE':'France','FRANKRIJK':'France','ESPAÑA':'Spain','SPAIN':'Spain','DEUTSCHLAND':'Germany','GERMANY':'Germany','UNITED KINGDOM':'United Kingdom','UK':'United Kingdom','PORTUGAL':'Portugal','NETHERLANDS':'Netherlands','NEDERLAND':'Netherlands','BELGIQUE':'Belgium','BELGIUM':'Belgium','SCHWEIZ':'Switzerland','SWITZERLAND':'Switzerland'};
+  for(let _ci=1;_ci<Math.min(lines.length,10);_ci++){
+    const _cl=lines[_ci].trim();
+    if(!_cl||priceAtEnd(_cl))continue;
+    // Via/Corso/Piazza → extract city after postal code or comma
+    const _addrM=_cl.match(/^(?:via|corso|piazza|viale|vicolo|strada|largo|rue|avenue|boulevard|calle|carrer|strasse|straße)s+.+,s*(?:d{4,5}s+)?(.+)$/i);
+    if(_addrM&&!city){city=_addrM[1].replace(/d{4,5}/,'').trim();continue;}
+    // Postal code + city: "20124 MILANO" or "SW1 LONDON"
+    const _capM=_cl.match(/^d{4,5}s+([A-Za-z][A-Za-zs]{2,})$/);
+    if(_capM&&!city){city=_capM[1].trim();continue;}
+    // Standalone known country keyword
+    const _ck=_cl.toUpperCase().replace(/[^A-Zs]/g,'').trim();
+    if(countryMap[_ck]&&!country){country=countryMap[_ck];continue;}
+  }
 
   // === CURRENCY — robust: check raw text for symbols, OCR variants, currency codes ===
   // Order matters: most specific first. € can come through as E in bad OCR.
@@ -1003,7 +1030,7 @@ function parseReceiptText(text) {
     if(/^tax\b/i.test(l)&&ams.length===1&&!tax) tax=amt;
   }
 
-  return {store,purchaseDate,date:purchaseDate,vatNumber,currency,total,subtotal,tax,tip,items:items.filter(it=>it.name)};
+  return {store,purchaseDate,date:purchaseDate,city,country,vatNumber,currency,total,subtotal,tax,tip,items:items.filter(it=>it.name)};
 }
 
 function handleTagInput(e){
@@ -1031,6 +1058,8 @@ function renderTagsInForm(){
 // ===== EDIT FORM =====
 function populateEditForm(parsed,rawText){
   document.getElementById('f-store').value=parsed.store||'';
+  const _fci=document.getElementById('f-city');if(_fci)_fci.value=parsed.city||'';
+  const _fco=document.getElementById('f-country');if(_fco)_fco.value=parsed.country||'';
   document.getElementById('f-date').value=parsed.date||new Date().toISOString().slice(0,10);
   document.getElementById('f-name').value='';
   const _fs=document.getElementById('f-subtotal');if(_fs)_fs.value=parsed.subtotal>0?parsed.subtotal.toFixed(2):'';
@@ -1120,6 +1149,8 @@ function readItemRows(){
 // ===== SAVE =====
 function doSave(){
   const store=document.getElementById('f-store').value.trim();
+  const city=(document.getElementById('f-city')||{value:''}).value.trim();
+  const country=(document.getElementById('f-country')||{value:''}).value.trim();
   const date=document.getElementById('f-date').value;
   const total=parseFloat(document.getElementById('f-total').value)||0;
   const subtotal=parseFloat((document.getElementById('f-subtotal')||{value:'0'}).value)||0;
@@ -1131,7 +1162,7 @@ function doSave(){
   const rawName=document.getElementById('f-name').value.trim();
   const name=rawName||(store&&date?date+' - '+store:date||'Receipt '+new Date().toLocaleDateString());
   const vat=document.getElementById('f-vat').value.trim();const currency=(document.getElementById('f-currency')||{value:'EUR'}).value||'EUR';
-  const data={store,purchaseDate:date,date,name,items,total:effectiveTotal,subtotal,tax,tip,vat,currency,notes,tags:[..._editTags]};
+  const data={store,purchaseDate:date,date,city,country,name,items,total:effectiveTotal,subtotal,tax,tip,vat,currency,notes,tags:[..._editTags]};
   const dup=receipts.find(r=>{
     if(r.id===currentId)return false;
     const sameStore=(r.store||'').toLowerCase()===(store||'').toLowerCase();
