@@ -938,8 +938,8 @@ function parseReceiptText(text) {
   const isSKU = l => /^[A-Z0-9][A-Z0-9\-\/]{2,14}$/.test(l);
   // Price at end of line: optional currency symbol (€ £ $ or E for misread €), then digits.decimals
   const priceAtEnd = l => {
-    const m = l.match(/(?:[€£\$€]|(?:\bE\b)|\bEUR\b)?\s*(\d+\.\d{2})\s*$/);
-    return m ? parseFloat(m[1]) : null;
+    const m = l.match(/(?:[€£\$€]|(?:\bE\b)|\bEUR\b)?\s*(\d+[.,]\d{2})\s*$/);
+    return m ? parseFloat(m[1].replace(',','.')) : null;
   };
   const countPrices = l => (l.match(/\d+[.,]\d{2}/g)||[]).length;
 
@@ -984,7 +984,7 @@ function parseReceiptText(text) {
     const pr = priceAtEnd(l);
     if (pr!==null && countPrices(l)===1 && !isStopLine(l)) {
       // Strip price from end to get name
-      const nm = l.replace(/\s*(?:[€£\$€]|\bE\b|\bEUR\b)?\s*\d+\.\d{2}\s*$/,'').trim();
+      const nm = l.replace(/\s*(?:[€£\$€]|\bE\b|\bEUR\b)?\s*\d+[.,]\d{2}\s*$/,'').replace(/\s+\d{1,2}%\s*$/,'').trim();
       if (nm.length>=2 && /[A-Za-z]/.test(nm)) {
         items.push({id:uid(),name:nm,unitSize:'',qty:1,unitPrice:pr,lineTotal:pr,category:'other',isDiscounted:false,originalPrice:null});
       } else {
