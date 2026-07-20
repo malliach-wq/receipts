@@ -542,7 +542,7 @@ let _ieFile=null,_ieOrigCanvas=null,_ieBright=0,_ieCont=0,_ieCropping=false,_ieC
 
 // ===== STORAGE =====
 function load(){try{receipts=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch(e){receipts=[];}}
-function save(){localStorage.setItem(STORE_KEY,JON.stringify(receipts));}
+function save(){localStorage.setItem(STORE_KEY,JSON.stringify(receipts));}
 
 // ===== UTILS =====
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
