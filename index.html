@@ -924,7 +924,7 @@ function parseReceiptText(text) {
   for (const l of lines) { const d=parseEUDate(l); if(d){purchaseDate=d;break;} }
 
   // === HELPERS ===
-  const isStopLine = l => /^(total|totale|importo|pagamento|sub.?total|tax[\s_]anal|tender|tendered|payment|change|resto|contante|carta|bancomat|pos\b|balance|bov|visa|master|amex|paypal|cash|epos|thank|loyalty|reward|cashier|server|assistant\s*:|id\s+%rate|cashback)/i.test(l.trim());
+  const isStopLine = l => /^(total|totale|sub.?total|tax[\s_]anal|tender|tendered|payment|pagamento|change|balance|bov|visa|master|amex|paypal|cash|epos|pos\b|thank|loyalty|reward|cashier|server|assistant\s*:|id\s+%rate|cashback)/i.test(l.trim());
   const isHeaderLine = l =>
     /^(triq|street|road|avenue|via|zone|district|central|cbd|www\.|https?:|\.com|\.mt)/i.test(l) ||
     /\btel\s*(no|:)|\bphone|\bfax\b|^\+\d/i.test(l) ||
