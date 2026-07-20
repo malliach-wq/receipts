@@ -1091,7 +1091,7 @@ const itemsSum=parseFloat(rows.reduce((s,tr)=>{
 const v=parseFloat(tr.querySelectorAll('input')[4]?.value)||0;
 return s+v;
 },0).toFixed(2));
-document.getElementById('items-total-display').textContent=fmt(itemsSum);
+const _itd=document.getElementById('items-total-display');if(_itd)_itd.textContent=fmt(itemsSum);
 const receiptTotal=parseFloat(parseFloat(document.getElementById('f-total')?.value||0).toFixed(2));
 const recon=document.getElementById('recon-bar');
 if(!recon)return;
