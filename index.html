@@ -1033,11 +1033,11 @@ function populateEditForm(parsed,rawText){
   document.getElementById('f-store').value=parsed.store||'';
   document.getElementById('f-date').value=parsed.date||new Date().toISOString().slice(0,10);
   document.getElementById('f-name').value='';
-  document.getElementById('f-subtotal').value=parsed.subtotal>0?parsed.subtotal.toFixed(2):'';
-  document.getElementById('f-tax').value=parsed.tax>0?parsed.tax.toFixed(2):'';
-  document.getElementById('f-tip').value=parsed.tip>0?parsed.tip.toFixed(2):'';
+  const _fs=document.getElementById('f-subtotal');if(_fs)_fs.value=parsed.subtotal>0?parsed.subtotal.toFixed(2):'';
+  const _ftax=document.getElementById('f-tax');if(_ftax)_ftax.value=parsed.tax>0?parsed.tax.toFixed(2):'';
+  const _ftip=document.getElementById('f-tip');if(_ftip)_ftip.value=parsed.tip>0?parsed.tip.toFixed(2):'';
   document.getElementById('f-total').value=parsed.total>0?parsed.total.toFixed(2):'';
-  document.getElementById('f-notes').value=parsed.notes||'';
+  const _fn=document.getElementById('f-notes');if(_fn)_fn.value=parsed.notes||'';
   document.getElementById('f-vat').value=parsed.vatNumber||'';
   const _fCurr=document.getElementById('f-currency');
   if(_fCurr){const _cv=parsed.currency||'EUR';for(const _o of _fCurr.options)_o.selected=_o.value===_cv;}
@@ -1122,10 +1122,10 @@ function doSave(){
   const store=document.getElementById('f-store').value.trim();
   const date=document.getElementById('f-date').value;
   const total=parseFloat(document.getElementById('f-total').value)||0;
-  const subtotal=parseFloat(document.getElementById('f-subtotal').value)||0;
-  const tax=parseFloat(document.getElementById('f-tax').value)||0;
-  const tip=parseFloat(document.getElementById('f-tip').value)||0;
-  const notes=document.getElementById('f-notes').value.trim();
+  const subtotal=parseFloat((document.getElementById('f-subtotal')||{value:'0'}).value)||0;
+  const tax=parseFloat((document.getElementById('f-tax')||{value:'0'}).value)||0;
+  const tip=parseFloat((document.getElementById('f-tip')||{value:'0'}).value)||0;
+  const notes=(document.getElementById('f-notes')||{value:''}).value.trim();
   const items=readItemRows();
   const effectiveTotal=total||parseFloat(items.reduce((s,i)=>s+(i.lineTotal||0),0).toFixed(2));
   const rawName=document.getElementById('f-name').value.trim();
