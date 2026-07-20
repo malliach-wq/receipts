@@ -895,7 +895,7 @@ function parseReceiptText(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   if (!lines.length) return {store:'',purchaseDate:'',vatNumber:'',currency:'EUR',total:0,subtotal:0,tax:0,tip:0,items:[]};
 
-  const store = (lines[0]||'').replace(/[$]/g,'S').replace(/[0](?=[a-zA-Z])/g,'O').trim(); // Line 0 is ALWAYS the store name
+  const store = (lines[0]||'').replace(/[$]/g,'S').replace(/[0](?=[a-zA-Z])/g,'O').replace(/\bTt([a-z])/g,'It$1').trim(); // Line 0 is ALWAYS the store name
 
   // === CURRENCY — robust: check raw text for symbols, OCR variants, currency codes ===
   // Order matters: most specific first. € can come through as E in bad OCR.
@@ -929,7 +929,7 @@ function parseReceiptText(text) {
   for (const l of lines) { const d=parseEUDate(l); if(d){purchaseDate=d;break;} }
 
   // === HELPERS ===
-  const isStopLine = l => /^(total|sub.?total|tax[\s_]anal|tender|tendered|payment|change|balance|bov|visa|master|amex|paypal|cash|epos|thank|loyalty|reward|cashier|server|assistant\s*:|id\s+%rate|cashback)/i.test(l.trim());
+  const isStopLine = l => /^(total|totale|importo|pagamento|sub.?total|tax[\s_]anal|tender|tendered|payment|change|resto|contante|carta|bancomat|pos\b|balance|bov|visa|master|amex|paypal|cash|epos|thank|loyalty|reward|cashier|server|assistant\s*:|id\s+%rate|cashback)/i.test(l.trim());
   const isHeaderLine = l =>
     /^(triq|street|road|avenue|via|zone|district|central|cbd|www\.|https?:|\.com|\.mt)/i.test(l) ||
     /\btel\s*(no|:)|\bphone|\bfax\b|^\+\d/i.test(l) ||
