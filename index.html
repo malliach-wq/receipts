@@ -901,10 +901,10 @@ function parseReceiptText(text) {
     const _cl=lines[_ci].trim();
     if(!_cl||/\d+[.,]\d{2}\s*$/.test(_cl))continue;
     // Via/Corso/Piazza → extract city after postal code or comma
-    const _addrM=_cl.match(/^(?:via|corso|piazza|viale|vicolo|strada|largo|rue|avenue|boulevard|calle|carrer|strasse|straße)s+.+,s*(?:d{4,5}s+)?(.+)$/i);
-    if(_addrM&&!city){city=_addrM[1].replace(/d{4,5}/,'').trim();continue;}
+    const _addrM=_cl.match(/^(?:via|corso|piazza|viale|vicolo|strada|largo|rue|avenue|boulevard|calle|carrer|strasse|straße)\s+.+,\s*(?:\d{4,5}\s+)?(.+)$/i);
+    if(_addrM&&!city){city=_addrM[1].replace(/\d{4,5}/,'').trim();continue;}
     // Postal code + city: "20124 MILANO" or "SW1 LONDON"
-    const _capM=_cl.match(/^d{4,5}s+([A-Za-z][A-Za-zs]{2,})$/);
+    const _capM=_cl.match(/^\d{4,5}\s+([A-Za-z][A-Za-zs]{2,})$/);
     if(_capM&&!city){city=_capM[1].trim();continue;}
     // Standalone known country keyword
     const _ck=_cl.toUpperCase().replace(/[^A-Zs]/g,'').trim();
