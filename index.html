@@ -84,7 +84,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .col-name{width:28%;overflow:hidden;}
 .col-unit{width:10%;}
 .col-qty{width:7%;text-align:center;}.col-qty input[type="number"]{text-align:center!important;}
-.col-price{width:13%;}
+.col-price{width:13%;text-align:right;}.col-price input{text-align:right!important;}
 .col-cat{width:14%;}
 .col-disc{width:5%;text-align:center;}
 .col-del{width:4%;}
@@ -1113,7 +1113,7 @@ const v=parseFloat(tr.querySelectorAll('input')[4]?.value)||0;
 return s+v;
 },0).toFixed(2));
 const _itd=document.getElementById('items-total-display');if(_itd)_itd.textContent=fmt(itemsSum);
-const _itc2=document.getElementById('items-total-cell');if(_itc2)_itc2.textContent=fmt(itemsSum);
+const _itc2=document.getElementById('items-total-cell');if(_itc2){_itc2.textContent=fmt(itemsSum);_itc2.style.color='';}
 const receiptTotal=parseFloat(parseFloat(document.getElementById('f-total')?.value||0).toFixed(2));
 const recon=document.getElementById('recon-bar');
 if(!recon)return;
@@ -1121,10 +1121,10 @@ if(rows.length===0||receiptTotal===0){recon.style.display='none';return;}
 const diff=Math.abs(itemsSum-receiptTotal);
 if(diff<0.02){
 recon.style.display='none';recon.style.background='#e6f9ed';recon.style.border='1px solid #1a6e38';
-const _itc=document.getElementById('items-total-cell');if(_itc)_itc.textContent=fmt(itemsSum);
+const _itc=document.getElementById('items-total-cell');if(_itc){_itc.textContent=fmt(itemsSum);_itc.style.color='';}
 recon.innerHTML='<span style="color:#1a6e38">✓ Items total matches receipt total ('+fmt(itemsSum)+')</span>';
 }else{
-recon.style.display='none';recon.style.background='#fff5f5';recon.style.border='1px solid #c53030';
+recon.style.display='block';recon.style.background='#fff5f5';recon.style.border='1px solid #c53030';const _itcR=document.getElementById('items-total-cell');if(_itcR)_itcR.style.color='#c53030';
 recon.innerHTML='<span style="color:#c53030">⚠ Items '+fmt(itemsSum)+' ≠ receipt total '+fmt(receiptTotal)+' — please check line items</span>';
 }
 }
