@@ -375,17 +375,16 @@ input[type=range]{width:130px;accent-color:var(--accent);}
         <table class="receipt-table" id="receipt-table">
           <thead><tr>
             <th>Item</th>
+            <th class="col-cat">Category</th>
             <th class="col-unit">Size</th>
             <th class="col-qty">Qty</th>
-            <th class="col-price">Unit $</th>
-            <th class="col-price">Total $</th>
-            <th>Category</th>
+            <th class="col-price" style="text-align:right">Unit <span class="curr-sym">€</span></th>
+            <th class="col-price" style="text-align:right">Total <span class="curr-sym">€</span></th>
           </tr></thead>
           <tbody id="receipt-body"></tbody>
           <tfoot><tr class="receipt-total-row">
-            <td colspan="4" style="text-align:right;color:var(--text-muted)">TOTAL</td>
-            <td class="col-price" id="d-total"></td>
-            <td></td>
+            <td colspan="5" style="text-align:right;color:var(--text-muted)">TOTAL</td>
+            <td class="col-price" style="text-align:right" id="d-total"></td>
           </tr></tfoot>
         </table>
         <span class="raw-toggle" onclick="document.getElementById('raw-box-detail').classList.toggle('open')">Show / hide OCR text</span>
@@ -1208,7 +1207,7 @@ function renderDetail(r){
     ].filter(Boolean).join('');
   }else{totBox.style.display='none';}
   const tbody=document.getElementById('receipt-body');
-  tbody.innerHTML=(r.items||[]).map(it=>'<tr><td>'+esc(it.name)+(it.isDiscounted?' <span style="color:#1a6e38;font-size:.7rem">SALE</span>':'')+'</td><td class="col-unit">'+esc(it.unitSize||'')+'</td><td class="col-qty">'+(it.qty||1)+'</td><td class="col-price">'+fmt(it.unitPrice)+'</td><td class="col-price">'+fmt(it.lineTotal)+'</td><td>'+esc(it.category||'')+'</td></tr>').join('');
+  tbody.innerHTML=(r.items||[]).map(it=>'<tr><td>'+esc(it.name)+(it.isDiscounted?' <span style="color:#1a6e38;font-size:.7rem">SALE</span>':'')+'</td><td class="col-cat">'+esc(it.category||'')+'</td><td class="col-unit">'+esc(it.unitSize||'')+'</td><td class="col-qty">'+(it.qty||1)+'</td><td class="col-price" style="text-align:right">'+fmt(it.unitPrice)+'</td><td class="col-price" style="text-align:right">'+fmt(it.lineTotal)+'</td></tr>').join('');
   document.getElementById('d-total').textContent=fmt(r.total);
   const rawBox=document.getElementById('raw-box-detail');
   rawBox.textContent=r.raw||'';
