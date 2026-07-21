@@ -273,13 +273,13 @@ input[type=range]{width:130px;accent-color:var(--accent);}
             <label>Store / Merchant</label>
             <input type="text" id="f-store" placeholder="e.g. Whole Foods">
           </div>
+          <div class="field-group" style="flex:2">
+            <label>Store Friendly Name</label>
+            <input type="text" id="f-friendly" placeholder="e.g. My Local Supermarket">
+          </div>
           <div class="field-group">
             <label>Date</label>
             <input type="date" id="f-date">
-          </div>
-          <div class="field-group" style="flex:2">
-            <label>Receipt Name</label>
-            <input type="text" id="f-name" placeholder="Auto-generated if blank">
           </div>
         </div>
         
@@ -307,6 +307,12 @@ input[type=range]{width:130px;accent-color:var(--accent);}
               <option value="CHF">CHF</option>
               <option value="AED">AED</option>
             </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group" style="flex:2">
+            <label>Receipt Name</label>
+            <input type="text" id="f-name" placeholder="Auto-generated if blank">
           </div>
         </div>
 <div class="section-title">Line Items</div>
@@ -1057,6 +1063,7 @@ function renderTagsInForm(){
 // ===== EDIT FORM =====
 function populateEditForm(parsed,rawText){
   document.getElementById('f-store').value=parsed.store||'';
+const _fff=document.getElementById('f-friendly');if(_fff)_fff.value=parsed.friendlyName||'';
   const _fci=document.getElementById('f-city');if(_fci)_fci.value=parsed.city||'';
   const _fco=document.getElementById('f-country');if(_fco)_fco.value=parsed.country||'';
   document.getElementById('f-date').value=parsed.date||new Date().toISOString().slice(0,10);
@@ -1148,6 +1155,7 @@ function readItemRows(){
 // ===== SAVE =====
 function doSave(){
   const store=document.getElementById('f-store').value.trim();
+const friendlyName=(document.getElementById('f-friendly')||{value:''}).value.trim();
   const city=(document.getElementById('f-city')||{value:''}).value.trim();
   const country=(document.getElementById('f-country')||{value:''}).value.trim();
   const date=document.getElementById('f-date').value;
@@ -1161,7 +1169,7 @@ function doSave(){
   const rawName=document.getElementById('f-name').value.trim();
   const name=rawName||(store&&date?date+' - '+store:date||'Receipt '+new Date().toLocaleDateString());
   const vat=document.getElementById('f-vat').value.trim();const currency=(document.getElementById('f-currency')||{value:'EUR'}).value||'EUR';
-  const data={store,purchaseDate:date,date,city,country,name,items,total:effectiveTotal,subtotal,tax,tip,vat,currency,notes,tags:[..._editTags]};
+  const data={store,friendlyName,purchaseDate:date,date,city,country,name,items,total:effectiveTotal,subtotal,tax,tip,vat,currency,notes,tags:[..._editTags]};
   const dup=receipts.find(r=>{
     if(r.id===currentId)return false;
     const sameStore=(r.store||'').toLowerCase()===(store||'').toLowerCase();
