@@ -36,7 +36,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sidebar-nav{display:flex;gap:4px;}
 .main-area{flex:1;display:flex;overflow:hidden;}
 .view{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.view.hidden{display:none!important;}
+.view.hidden{display:none;}
 .btn{padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;}
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-primary:hover{background:var(--accent-dark);}
@@ -76,21 +76,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .totals-section-title{font-size:.74rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
 .totals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
 .section-title{font-size:.76rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;margin-top:16px;}
-.items-table,.receipt-table{width:100%;border-collapse:collapse;font-size:.8rem;}.items-table{table-layout:fixed;}
+.items-table,.receipt-table{width:100%;border-collapse:collapse;font-size:.8rem;}
 .items-table th,.receipt-table th{padding:6px 8px;text-align:left;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);font-size:.72rem;text-transform:uppercase;}
-.items-table td,.receipt-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);}.items-table th,.receipt-table th{padding:6px 8px;}
-.items-table input,.items-table select{width:100%;padding:3px 5px;border:1px solid transparent;border-radius:4px;font-size:.8rem;font-family:inherit;background:transparent;}.items-table input[type="number"]{text-align:right;}
+.items-table td,.receipt-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);}
+.items-table input,.items-table select{width:100%;padding:3px 5px;border:1px solid transparent;border-radius:4px;font-size:.8rem;font-family:inherit;background:transparent;}
 .items-table input:focus,.items-table select:focus{border-color:var(--accent);outline:none;background:var(--surface);}
-.col-name{width:28%;overflow:hidden;}
-.col-unit{width:10%;}
-.col-qty{width:7%;text-align:center;}.col-qty input[type="number"]{text-align:center!important;}
-.col-price{width:13%;text-align:right;}.col-price input{text-align:right!important;padding-right:0;padding-left:2px;}.col-qty input{text-align:center!important;padding-right:0;padding-left:0;}.col-price input[type="number"]::-webkit-inner-spin-button,.col-price input[type="number"]::-webkit-outer-spin-button,.col-qty input[type="number"]::-webkit-inner-spin-button,.col-qty input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}.col-price input[type="number"],.col-qty input[type="number"]{-moz-appearance:textfield;}
-.col-cat{width:14%;}
-.col-disc{width:5%;text-align:center;}
-.col-del{width:4%;}
-
+.col-name{min-width:120px;}
+.col-unit{width:80px;}
+.col-qty{width:46px;}
+.col-price{width:68px;}
+.col-cat{width:90px;}
+.col-disc{width:30px;text-align:center;}
+.col-del{width:28px;}
+.disc-check{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
 .del-btn{background:none;border:none;color:#ccc;font-size:1rem;cursor:pointer;padding:0 4px;}
-.del-btn:hover{color:#e53e3e;}.items-total-label{text-align:right;font-weight:600;color:var(--text-muted);padding-right:12px!important;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;}.items-total-val{font-weight:700;color:var(--accent);text-align:right;}
+.del-btn:hover{color:#e53e3e;}
 .add-row-btn{margin-top:8px;font-size:.78rem;color:var(--accent);background:none;border:1.5px dashed var(--border);border-radius:6px;padding:5px 14px;cursor:pointer;transition:all .15s;}
 .add-row-btn:hover{border-color:var(--accent);background:var(--accent-light);}
 .total-row td{font-weight:700;font-size:.82rem;}
@@ -180,33 +180,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .no-data{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:.84rem;}
 .toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:12px 18px;border-radius:var(--radius);font-size:.84rem;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.18);transform:translateY(80px);opacity:0;transition:all .3s;z-index:999;max-width:320px;}
 .toast.show{transform:translateY(0);opacity:1;}
-
-#view-edit{display:flex;flex-direction:column;}
-.edit-outer{display:flex;flex:1;overflow:hidden;min-height:0;}
-.edit-body{flex:1;overflow-y:auto;padding-bottom:40px;}
-#scan-panel{display:none;flex-direction:column;width:370px;min-width:240px;border-left:1px solid var(--border);background:var(--bg-secondary);}
-#scan-panel.visible{display:flex;}
-.scan-toolbar{display:flex;align-items:center;gap:5px;padding:6px 10px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg);}
-.scan-lbl{font-size:.77rem;font-weight:600;color:var(--text-muted);flex:1;}
-.zbtn{width:26px;height:26px;border:1px solid var(--border);border-radius:5px;background:var(--bg);cursor:pointer;font-size:1.05rem;display:flex;align-items:center;justify-content:center;color:var(--text);padding:0;}
-.zbtn:hover{background:var(--accent-light);border-color:var(--accent);}
-.zpct{font-size:.75rem;min-width:34px;text-align:center;color:var(--text);}
-.scan-scroll{flex:1;overflow:auto;padding:10px;display:flex;justify-content:center;align-items:flex-start;}
-#scan-img{transform-origin:top center;max-width:none;display:block;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.15);}
-
-.view.hidden{display:none!important;}
-.scan-scroll{cursor:grab;}
-.ie-header{padding:12px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.ie-header h2{font-size:1rem;font-weight:700;}
-.ie-toolbar{display:flex;align-items:center;gap:14px;padding:10px 24px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;background:var(--surface);}
-.ie-tool-group{display:flex;align-items:center;gap:8px;}
-.ie-tool-lbl{font-size:.76rem;font-weight:600;color:var(--text-muted);white-space:nowrap;}
-.ie-tool-val{font-size:.76rem;min-width:32px;text-align:right;color:var(--text);font-weight:600;}
-#ie-canvas-wrap{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#1e1e1e;position:relative;}
-#ie-canvas{display:block;box-shadow:0 4px 24px rgba(0,0,0,.4);}
-.ie-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:.73rem;padding:5px 14px;border-radius:99px;pointer-events:none;white-space:nowrap;}
-#ie-crop-btn.active{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important;}
-input[type=range]{width:130px;accent-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -263,85 +236,38 @@ input[type=range]{width:130px;accent-color:var(--accent);}
       <div class="edit-header">
         <h2 id="edit-title">New Receipt</h2>
         <div class="btn-row">
-          <button class="btn btn-ghost btn-sm" onclick="cancelNewOrEdit()">Cancel</button>
+          <button class="btn btn-ghost btn-sm" onclick="showUpload()">Cancel</button>
           <button class="btn btn-primary btn-sm" onclick="doSave()">Save Receipt</button>
         </div>
       </div>
-      <div class="edit-outer"><div class="edit-body">
+      <div class="edit-body">
         <div class="field-row">
           <div class="field-group" style="flex:2">
             <label>Store / Merchant</label>
             <input type="text" id="f-store" placeholder="e.g. Whole Foods">
           </div>
-          <div class="field-group" style="flex:2">
-            <label>Store Friendly Name</label>
-            <input type="text" id="f-friendly" placeholder="e.g. My Local Supermarket">
-          </div>
           <div class="field-group">
             <label>Date</label>
             <input type="date" id="f-date">
           </div>
-        </div>
-        
-        <div class="field-row">
-          <div class="field-group">
-            <label>City</label>
-            <input type="text" id="f-city" placeholder="e.g. Milan">
-          </div>
-          <div class="field-group">
-            <label>Country</label>
-            <input type="text" id="f-country" placeholder="e.g. Italy">
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field-group" style="flex:2">
-            <label>VAT Number</label>
-            <input type="text" id="f-vat" placeholder="e.g. MT12345678">
-          </div>
-          <div class="field-group">
-            <label>Currency</label>
-            <select id="f-currency" onchange="updateCurrSymbols()">
-              <option value="EUR">€ EUR</option>
-              <option value="USD">$ USD</option>
-              <option value="GBP">£ GBP</option>
-              <option value="CHF">CHF</option>
-              <option value="AED">AED</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-row">
           <div class="field-group" style="flex:2">
             <label>Receipt Name</label>
             <input type="text" id="f-name" placeholder="Auto-generated if blank">
           </div>
         </div>
-<div class="section-title">Line Items</div>
-        <table class="items-table" id="items-table">
-          <thead><tr>
-            <th class="col-name">Item</th>
-            <th class="col-cat">Category</th>
-            <th class="col-unit">Size/Unit</th>
-            <th class="col-qty" style="text-align:center">Qty</th>
-            <th class="col-price" style="text-align:right">Unit <span class="curr-sym">€</span></th>
-            <th class="col-disc">Disc</th>
-            <th class="col-price" style="text-align:right">Total <span class="curr-sym">€</span></th>
-            <th class="col-del"></th>
-          </tr></thead>
-          <tbody id="items-body"></tbody>
-          <tfoot><tr>
-            <td colspan="6" class="items-total-label">Items Total</td>
-            <td class="items-total-val" id="items-total-cell">€0.00</td>
-            <td></td>
-          </tr></tfoot>
-        </table>
-        <button class="add-row-btn" onclick="addItemRow()">+ Add Item</button>
-<div id="recon-bar" style="display:none;padding:6px 10px;border-radius:6px;font-size:.78rem;margin-top:6px;"></div>
-        
+        <div class="totals-section">
+          <div class="totals-section-title">Receipt Totals</div>
+          <div class="totals-grid">
+            <div class="field-group"><label>Subtotal</label><input type="number" id="f-subtotal" step="0.01" min="0" placeholder="0.00"></div>
+            <div class="field-group"><label>Tax</label><input type="number" id="f-tax" step="0.01" min="0" placeholder="0.00"></div>
+            <div class="field-group"><label>Tip</label><input type="number" id="f-tip" step="0.01" min="0" placeholder="0.00"></div>
+            <div class="field-group"><label>Total</label><input type="number" id="f-total" step="0.01" min="0" placeholder="0.00"></div>
+          </div>
+        </div>
         <div class="field-row">
           <div class="field-group" style="flex:2">
             <label>Notes</label>
-            <input type="hidden" id="f-total" value="0"><input type="hidden" id="f-subtotal" value="0"><input type="hidden" id="f-tax" value="0"><input type="hidden" id="f-tip" value="0">
-<textarea id="f-notes" placeholder="e.g. Holiday dinner, business expense&hellip;"></textarea>
+            <textarea id="f-notes" placeholder="e.g. Holiday dinner, business expense&hellip;"></textarea>
           </div>
           <div class="field-group" style="flex:2">
             <label>Tags (Enter or comma to add)</label>
@@ -350,11 +276,30 @@ input[type=range]{width:130px;accent-color:var(--accent);}
             </div>
           </div>
         </div>
+        <div class="section-title">Line Items</div>
+        <table class="items-table" id="items-table">
+          <thead><tr>
+            <th class="col-name">Item</th>
+            <th class="col-unit">Size/Unit</th>
+            <th class="col-qty">Qty</th>
+            <th class="col-price">Unit $</th>
+            <th class="col-price">Total $</th>
+            <th class="col-cat">Category</th>
+            <th class="col-disc" title="On sale / discounted?">&#x1F4B0;</th>
+            <th class="col-del"></th>
+          </tr></thead>
+          <tbody id="items-body"></tbody>
+          <tfoot><tr class="total-row">
+            <td colspan="4" style="text-align:right;color:var(--text-muted);font-size:.78rem">ITEMS TOTAL</td>
+            <td id="items-total-display" style="text-align:right;color:var(--accent)">$0.00</td>
+            <td colspan="3"></td>
+          </tr></tfoot>
+        </table>
+        <button class="add-row-btn" onclick="addItemRow()">+ Add Item</button>
         <div id="raw-section" style="display:none;margin-top:8px">
           <span class="raw-toggle" onclick="document.getElementById('raw-box-edit').classList.toggle('open')">Show / hide OCR text</span>
           <div class="raw-box" id="raw-box-edit"></div>
         </div>
-      </div><div id="scan-panel"><div class="scan-toolbar"><span class="scan-lbl">Receipt Scan</span><button class="zbtn" onclick="zoomOut()" title="Zoom out">−</button><span class="zpct" id="zpct">100%</span><button class="zbtn" onclick="zoomIn()" title="Zoom in">+</button><button class="zbtn" onclick="zoomReset()" style="width:auto;padding:0 6px;font-size:.7rem" title="Fit to width">Fit</button></div><div class="scan-scroll" id="scan-scroll" onwheel="handleScanWheel(event)"><img id="scan-img" alt="Scanned receipt"></div></div>
       </div>
     </div>
     <!-- DETAIL -->
@@ -381,16 +326,17 @@ input[type=range]{width:130px;accent-color:var(--accent);}
         <table class="receipt-table" id="receipt-table">
           <thead><tr>
             <th>Item</th>
-            <th class="col-cat">Category</th>
             <th class="col-unit">Size</th>
             <th class="col-qty">Qty</th>
-            <th class="col-price" style="text-align:right">Unit <span class="curr-sym">€</span></th>
-            <th class="col-price" style="text-align:right">Total <span class="curr-sym">€</span></th>
+            <th class="col-price">Unit $</th>
+            <th class="col-price">Total $</th>
+            <th>Category</th>
           </tr></thead>
           <tbody id="receipt-body"></tbody>
           <tfoot><tr class="receipt-total-row">
-            <td colspan="5" style="text-align:right;color:var(--text-muted)">TOTAL</td>
-            <td class="col-price" style="text-align:right" id="d-total"></td>
+            <td colspan="4" style="text-align:right;color:var(--text-muted)">TOTAL</td>
+            <td class="col-price" id="d-total"></td>
+            <td></td>
           </tr></tfoot>
         </table>
         <span class="raw-toggle" onclick="document.getElementById('raw-box-detail').classList.toggle('open')">Show / hide OCR text</span>
@@ -481,38 +427,6 @@ input[type=range]{width:130px;accent-color:var(--accent);}
     </div>
   </main>
 </div>
-<!-- IMAGE EDITOR -->
-<div class="view hidden" id="view-image-edit">
-<div class="ie-header">
-<h2>&#x1F5BC;&#xFE0F; Prepare Receipt Image</h2>
-<div class="btn-row">
-<button class="btn btn-ghost btn-sm" onclick="cancelImageEdit()">Cancel</button>
-<button class="btn btn-primary btn-sm" onclick="proceedToOCR()">Scan Receipt &#x2192;</button>
-</div>
-</div>
-<div class="ie-toolbar">
-<div class="ie-tool-group">
-<span class="ie-tool-lbl">Brightness</span>
-<input type="range" id="ie-brightness" min="-100" max="100" value="0" oninput="updateIEBrightness()">
-<span class="ie-tool-val" id="ie-brightness-val">0</span>
-</div>
-<div class="ie-tool-group">
-<span class="ie-tool-lbl">Contrast</span>
-<input type="range" id="ie-contrast" min="-100" max="100" value="0" oninput="updateIEContrast()">
-<span class="ie-tool-val" id="ie-contrast-val">0</span>
-</div>
-<div style="flex:1"></div>
-<button id="ie-crop-btn" class="btn btn-ghost btn-sm" onclick="toggleCropMode()">&#x2702; Crop</button>
-<button class="btn btn-ghost btn-sm" onclick="resetImageEdit()">&#x21BA; Reset</button>
-</div>
-<div id="ie-canvas-wrap">
-<canvas id="ie-canvas"
-onmousedown="ieMouseDown(event)"
-onmousemove="ieMouseMove(event)"
-onmouseup="ieMouseUp(event)"></canvas>
-<div class="ie-hint" id="ie-hint">Adjust brightness/contrast &bull; Click &#x2702;&nbsp;Crop then drag to crop &bull; Click Apply Crop to confirm</div>
-</div>
-</div>
 <!-- DUPLICATE MODAL -->
 <div class="modal-overlay hidden" id="dup-modal">
   <div class="modal-box">
@@ -539,7 +453,7 @@ const CAT_KW={
   beverages:['water','juice','soda','coffee','tea','beer','wine','spirits','vodka','whiskey','rum','gin','kombucha','lemonade','gatorade','energy drink','sparkling','drink','beverage','coke','pepsi','sprite','almond milk','oat milk','soy milk'],
   snacks:['chip','crisp','pretzel','popcorn','nut','almond','cashew','peanut','trail mix','granola','bar','chocolate','candy','gummy','marshmallow','rice cake','jerky','snack'],
   household:['detergent','soap','shampoo','conditioner','cleaner','bleach','sponge','paper towel','toilet paper','tissue','trash bag','dish','laundry','fabric softener','dryer sheet','wrap','foil','garbage','household'],
-  personal:['razor','shave','deodorant','toothbrush','tomthpaste','floss','lotion','sunscreen','lipstick','mascara','foundation','perfume','cologne','nail','cotton','pad','tampon','diaper','baby'],
+  personal:['razor','shave','deodorant','toothbrush','toothpaste','floss','lotion','sunscreen','lipstick','mascara','foundation','perfume','cologne','nail','cotton','pad','tampon','diaper','baby'],
   pharmacy:['vitamin','supplement','medicine','aspirin','ibuprofen','tylenol','advil','cold','flu','cough','allergy','antibiotic','bandage','first aid','pharmacy','prescription'],
   other:[]
 };
@@ -550,10 +464,6 @@ let currentId=null;
 let editBackup=null;
 let _pendingSaveData=null;
 let _editTags=[];
-let _scannedImageUrl=null;
-let _imgZoom=1;
-
-let _ieFile=null,_ieOrigCanvas=null,_ieBright=0,_ieCont=0,_ieCropping=false,_ieCropRect=null,_ieDispScale=1,_ieDrag=null;
 
 // ===== STORAGE =====
 function load(){try{receipts=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch(e){receipts=[];}}
@@ -562,15 +472,7 @@ function save(){localStorage.setItem(STORE_KEY,JSON.stringify(receipts));}
 // ===== UTILS =====
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function getCurrSym(){
-  const v=(document.getElementById('f-currency')||{value:'EUR'}).value||'EUR';
-  return{EUR:'€',USD:'$',GBP:'£',CHF:'CHF ',AED:'AED '}[v]||'€';
-}
-function updateCurrSymbols(){
-  const sym=getCurrSym();
-  document.querySelectorAll('.curr-sym').forEach(el=>el.textContent=sym);
-}
-function fmt(n){return getCurrSym()+(parseFloat(n)||0).toFixed(2);}
+function fmt(n){return '$'+(parseFloat(n)||0).toFixed(2);}
 function toast(msg,dur){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),dur||3000);}
 function normalizeKey(name,unit){return((name||'')+' '+(unit||'')).toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim().slice(0,48);}
 function guessCategory(name){
@@ -583,36 +485,15 @@ function extractUnitSize(name){
   return m?m[1].trim():'';
 }
 
-// ===== VIEW ROUTING =====
-const ALL_VIEWS=['view-upload','view-ocr','view-edit','view-detail','view-analytics','view-item-search','view-roadmap','view-image-edit'];
-function showView(id){ALL_VIEWS.forEach(v=>{const el=document.getElementById(v);if(el)el.classList.toggle('hidden',v!==id);});}
 // ===== INIT =====
 load();
 renderSidebar();
 if(receipts.length===0)showView('view-upload');else showDetail(receipts[0].id);
 
-
-function cancelNewOrEdit(){
-_scannedImageUrl=null;renderScannedImage();
-if(editBackup){
-const idx=receipts.findIndex(x=>x.id===editBackup.id);
-if(idx>=0)receipts[idx]=editBackup;save();
-editBackup=null;showDetail(currentId);
-}else{
-editBackup=null;
-showUpload();
-}
-}
-function showUpload(){
-_scannedImageUrl=null;currentId=null;
-['f-store','f-name','f-subtotal','f-tax','f-tip','f-total','f-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-const di=document.getElementById('f-date');if(di)di.value=new Date().toISOString().slice(0,10);
-_editTags=[];renderTagsInForm();
-const ib=document.getElementById('items-body');if(ib)ib.innerHTML='';
-const rb=document.getElementById('recon-bar');if(rb)rb.style.display='none';
-const rs=document.getElementById('raw-section');if(rs)rs.style.display='none';
-renderSidebar();showView('view-upload');
-}
+// ===== VIEW ROUTING =====
+const ALL_VIEWS=['view-upload','view-ocr','view-edit','view-detail','view-analytics','view-item-search','view-roadmap'];
+function showView(id){ALL_VIEWS.forEach(v=>{const el=document.getElementById(v);if(el)el.classList.toggle('hidden',v!==id);});}
+function showUpload(){currentId=null;renderSidebar();showView('view-upload');}
 function showDetail(id){
   currentId=id;
   const r=receipts.find(x=>x.id===id);
@@ -647,397 +528,116 @@ function renderSidebar(filter){
 }
 
 // ===== FILE HANDLING =====
-function handleFile(f){if(f)showImageEditor(f);}
+function handleFile(f){if(f)runOCR(f);}
 function handleDrop(e){
-e.preventDefault();
-document.getElementById('drop-zone').classList.remove('drag-over');
-const f=e.dataTransfer.files[0];
-if(f&&(f.type.startsWith('image/')||f.type==='application/pdf'))showImageEditor(f);
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  const f=e.dataTransfer.files[0];
+  if(f&&(f.type.startsWith('image/')||f.type==='application/pdf'))runOCR(f);
 }
 
 // ===== PDF SUPPORT =====
 async function pdfToCanvas(file){
-if(typeof pdfjsLib==='undefined')throw new Error('PDF.js not available');
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-const ab=await file.arrayBuffer();
-const pdf=await pdfjsLib.getDocument({data:ab}).promise;
-const page=await pdf.getPage(1);
-const vp=page.getViewport({scale:2.5});
-const canvas=document.createElement('canvas');
-canvas.width=vp.width;canvas.height=vp.height;
-await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
-return canvas;
-}
-
-async function fileToCanvas(file){
-return new Promise((res,rej)=>{
-const img=new Image();
-const url=URL.createObjectURL(file);
-img.onload=()=>{
-const c=document.createElement('canvas');
-c.width=img.naturalWidth;c.height=img.naturalHeight;
-c.getContext('2d').drawImage(img,0,0);
-URL.revokeObjectURL(url);res(c);
-};
-img.onerror=rej;img.src=url;
-});
-}
-function cropToContent(canvas){
-const w=canvas.width,h=canvas.height;
-const sc=Math.min(1,800/Math.max(w,h));
-const sw=Math.floor(w*sc),sh=Math.floor(h*sc);
-let d;
-if(sc<1){const tc=document.createElement('canvas');tc.width=sw;tc.height=sh;tc.getContext('2d').drawImage(canvas,0,0,sw,sh);d=tc.getContext('2d').getImageData(0,0,sw,sh).data;}
-else{d=canvas.getContext('2d').getImageData(0,0,w,h).data;}
-function px(x,y){const i=(y*sw+x)*4;return(d[i]+d[i+1]+d[i+2])/3;}
-const avgCorner=(px(0,0)+px(sw-1,0)+px(0,sh-1)+px(sw-1,sh-1))/4;
-const darkBg=avgCorner<100;
-let x0=sw,y0=sh,x1=0,y1=0;
-for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
-const i=(y*sw+x)*4;
-const br=(d[i]+d[i+1]+d[i+2])/3;
-const hit=darkBg?br>150:(d[i]<220||d[i+1]<220||d[i+2]<220);
-if(hit){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
-}
-if(x1<=x0||y1<=y0)return canvas;
-const pad=Math.round(Math.max(sw,sh)*0.04);
-const ox0=Math.max(0,Math.round((x0-pad)/sc));
-const oy0=Math.max(0,Math.round((y0-pad)/sc));
-const ox1=Math.min(w,Math.round((x1+pad)/sc));
-const oy1=Math.min(h,Math.round((y1+pad)/sc));
-const out=document.createElement('canvas');
-out.width=ox1-ox0;out.height=oy1-oy0;
-out.getContext('2d').drawImage(canvas,ox0,oy0,out.width,out.height,0,0,out.width,out.height);
-return out;
+  if(typeof pdfjsLib==='undefined')throw new Error('PDF.js not available');
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const ab=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+  const page=await pdf.getPage(1);
+  const vp=page.getViewport({scale:2.5});
+  const canvas=document.createElement('canvas');
+  canvas.width=vp.width;canvas.height=vp.height;
+  await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+  return canvas;
 }
 
 // ===== OCR =====
-async function showImageEditor(file){
-_ieFile=file;_ieBright=0;_ieCont=0;_ieCropRect=null;_ieCropping=false;_ieDrag=null;
-const bi=document.getElementById('ie-brightness');if(bi)bi.value=0;
-const ci=document.getElementById('ie-contrast');if(ci)ci.value=0;
-const bv=document.getElementById('ie-brightness-val');if(bv)bv.textContent='0';
-const cv=document.getElementById('ie-contrast-val');if(cv)cv.textContent='0';
-const cb=document.getElementById('ie-crop-btn');if(cb){cb.classList.remove('active');cb.textContent='✂ Crop';}
-showView('view-image-edit');
-await new Promise(r=>requestAnimationFrame(r));
-try{
-_ieOrigCanvas=file.type==='application/pdf'?await pdfToCanvas(file):await fileToCanvas(file);
-renderIE();
-}catch(e){toast('Could not load image: '+e.message);showUpload();}
-}
-function renderIE(){
-const wrap=document.getElementById('ie-canvas-wrap');
-const canvas=document.getElementById('ie-canvas');
-if(!_ieOrigCanvas||!canvas||!wrap)return;
-const avW=wrap.clientWidth-40,avH=wrap.clientHeight-100;
-const sc=Math.min(1,avW/_ieOrigCanvas.width,avH/_ieOrigCanvas.height);
-_ieDispScale=sc;
-canvas.width=Math.round(_ieOrigCanvas.width*sc);
-canvas.height=Math.round(_ieOrigCanvas.height*sc);
-const ctx=canvas.getContext('2d');
-const b=1+_ieBright/100,c=_ieCont>=0?1+_ieCont/100:(100+_ieCont)/100;
-ctx.filter='brightness('+b+') contrast('+c+')';
-ctx.drawImage(_ieOrigCanvas,0,0,canvas.width,canvas.height);
-ctx.filter='none';
-if(_ieCropRect){
-const r=_ieCropRect,s=_ieDispScale;
-ctx.save();
-ctx.fillStyle='rgba(0,0,0,0.45)';ctx.fillRect(0,0,canvas.width,canvas.height);
-ctx.filter='brightness('+b+') contrast('+c+')';
-ctx.drawImage(_ieOrigCanvas,r.x,r.y,r.w,r.h,r.x*s,r.y*s,r.w*s,r.h*s);
-ctx.filter='none';
-ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([6,3]);
-ctx.strokeRect(r.x*s,r.y*s,r.w*s,r.h*s);
-ctx.restore();
-}
-}
-function updateIEBrightness(){
-_ieBright=parseInt(document.getElementById('ie-brightness').value);
-document.getElementById('ie-brightness-val').textContent=(_ieBright>0?'+':'')+_ieBright;
-renderIE();
-}
-function updateIEContrast(){
-_ieCont=parseInt(document.getElementById('ie-contrast').value);
-document.getElementById('ie-contrast-val').textContent=(_ieCont>0?'+':'')+_ieCont;
-renderIE();
-}
-function toggleCropMode(){
-if(_ieCropping&&_ieCropRect&&_ieCropRect.w>10&&_ieCropRect.h>10){
-const r=_ieCropRect;
-const out=document.createElement('canvas');
-out.width=Math.round(r.w);out.height=Math.round(r.h);
-out.getContext('2d').drawImage(_ieOrigCanvas,r.x,r.y,r.w,r.h,0,0,r.w,r.h);
-_ieOrigCanvas=out;_ieCropRect=null;
-}
-_ieCropping=!_ieCropping;_ieCropRect=null;_ieDrag=null;
-const cb=document.getElementById('ie-crop-btn');
-if(cb){cb.classList.toggle('active',_ieCropping);cb.textContent=_ieCropping?'Apply Crop':'✂ Crop';}
-const canvas=document.getElementById('ie-canvas');
-if(canvas)canvas.style.cursor=_ieCropping?'crosshair':'default';
-renderIE();
-}
-function resetImageEdit(){
-_ieBright=0;_ieCont=0;_ieCropRect=null;_ieCropping=false;_ieDrag=null;
-document.getElementById('ie-brightness').value=0;document.getElementById('ie-contrast').value=0;
-document.getElementById('ie-brightness-val').textContent='0';document.getElementById('ie-contrast-val').textContent='0';
-const cb=document.getElementById('ie-crop-btn');if(cb){cb.classList.remove('active');cb.textContent='✂ Crop';}
-const canvas=document.getElementById('ie-canvas');if(canvas)canvas.style.cursor='default';
-const f=_ieFile;_ieOrigCanvas=null;showImageEditor(f);
-}
-function cancelImageEdit(){_ieOrigCanvas=null;_ieFile=null;showUpload();}
-function ieMouseDown(e){
-if(!_ieCropping)return;
-const canvas=document.getElementById('ie-canvas');
-const rect=canvas.getBoundingClientRect();
-const mx=(e.clientX-rect.left)/_ieDispScale,my=(e.clientY-rect.top)/_ieDispScale;
-_ieDrag={x:mx,y:my};_ieCropRect={x:mx,y:my,w:0,h:0};e.preventDefault();
-}
-function ieMouseMove(e){
-if(!_ieCropping||!_ieDrag)return;
-const canvas=document.getElementById('ie-canvas');
-const rect=canvas.getBoundingClientRect();
-const cx=(e.clientX-rect.left)/_ieDispScale,cy=(e.clientY-rect.top)/_ieDispScale;
-_ieCropRect={x:Math.max(0,Math.min(_ieDrag.x,cx)),y:Math.max(0,Math.min(_ieDrag.y,cy)),w:Math.abs(cx-_ieDrag.x),h:Math.abs(cy-_ieDrag.y)};
-renderIE();
-}
-function ieMouseUp(){_ieDrag=null;}
-async function proceedToOCR(){
-if(!_ieOrigCanvas){showUpload();return;}
-// Auto-apply any drawn crop rect before scanning
-if(_ieCropRect&&_ieCropRect.w>10&&_ieCropRect.h>10){
-const r=_ieCropRect;
-const cropped=document.createElement('canvas');
-cropped.width=Math.round(r.w);cropped.height=Math.round(r.h);
-cropped.getContext('2d').drawImage(_ieOrigCanvas,r.x,r.y,r.w,r.h,0,0,r.w,r.h);
-_ieOrigCanvas=cropped;_ieCropRect=null;_ieCropping=false;
-}
-const final=document.createElement('canvas');
-final.width=_ieOrigCanvas.width;final.height=_ieOrigCanvas.height;
-const ctx=final.getContext('2d');
-const b=1+_ieBright/100,c=_ieCont>=0?1+_ieCont/100:(100+_ieCont)/100;
-ctx.filter='brightness('+b+') contrast('+c+')';
-ctx.drawImage(_ieOrigCanvas,0,0);ctx.filter='none';
-_ieOrigCanvas=null;
-runOCROnCanvas(final);
-}
-async function runOCROnCanvas(canvas){
-showView('view-ocr');
-const lbl=document.getElementById('ocr-label');
-const bar=document.getElementById('prog-bar');
-try{
-_scannedImageUrl=canvas.toDataURL('image/jpeg',0.92);
-lbl.textContent='Loading OCR engine...';bar.style.width='18%';
-const{data:{text}}=await Tesseract.recognize(canvas,'eng',{
-workerPath:'https://unpkg.com/tesseract.js@4.1.1/dist/worker.min.js',
-corePath:'https://unpkg.com/tesseract.js-core@4.0.1/',
-langPath:'https://tessdata.projectnaptha.com/4.0.0',
-logger:m=>{
-if(m.status==='recognizing text'){
-bar.style.width=(18+m.progress*82)+'%';
-lbl.textContent='Reading text... '+Math.round(m.progress*100)+'%';
-}else{lbl.textContent=m.status;}
-}
-});
-const parsed=parseReceiptText(text);
-populateEditForm(parsed,text);
-showView('view-edit');
-renderScannedImage();
-}catch(err){
-toast('OCR failed: '+err.message);
-showUpload();
-}
-}
-
-function renderScannedImage(){
-const panel=document.getElementById('scan-panel');
-const img=document.getElementById('scan-img');
-if(!panel)return;
-if(!_scannedImageUrl){panel.classList.remove('visible');return;}
-img.src=_scannedImageUrl;
-panel.classList.add('visible');
-initScanPan();
-img.onload=()=>{
-const scroll=document.getElementById('scan-scroll');
-_imgZoom=scroll&&img.naturalWidth>0?Math.min(1,(scroll.clientWidth-24)/img.naturalWidth):1;
-applyZoom();
-};
-}
-function applyZoom(){
-  const img=document.getElementById('scan-img');
-  const lbl=document.getElementById('zpct');
-  if(img)img.style.transform='scale('+_imgZoom+')';
-  if(lbl)lbl.textContent=Math.round(_imgZoom*100)+'%';
-}
-function zoomIn(){_imgZoom=Math.min(4,parseFloat((_imgZoom+0.25).toFixed(2)));applyZoom();}
-function zoomOut(){_imgZoom=Math.max(0.1,parseFloat((_imgZoom-0.25).toFixed(2)));applyZoom();}
-function zoomReset(){
-  const s=document.getElementById('scan-scroll'),img=document.getElementById('scan-img');
-  _imgZoom=s&&img&&img.naturalWidth>0?Math.min(1,(s.clientWidth-24)/img.naturalWidth):1;
-  applyZoom();
-}
-function handleScanWheel(e){e.preventDefault();if(e.deltaY<0)zoomIn();else zoomOut();}
-
-function initScanPan(){
-const scroll=document.getElementById('scan-scroll');
-if(!scroll||scroll._panInit)return;
-scroll._panInit=true;
-let drag=null;
-scroll.addEventListener('mousedown',e=>{
-if(e.button!==0)return;
-drag={x:e.clientX+scroll.scrollLeft,y:e.clientY+scroll.scrollTop};
-scroll.style.cursor='grabbing';e.preventDefault();
-});
-window.addEventListener('mousemove',e=>{if(!drag)return;scroll.scrollLeft=drag.x-e.clientX;scroll.scrollTop=drag.y-e.clientY;});
-window.addEventListener('mouseup',()=>{if(drag){drag=null;scroll.style.cursor='grab';}});
+async function runOCR(file){
+  showView('view-ocr');
+  const lbl=document.getElementById('ocr-label');
+  const bar=document.getElementById('prog-bar');
+  try{
+    let source=file;
+    if(file.type==='application/pdf'){
+      lbl.textContent='Rendering PDF page 1...';bar.style.width='8%';
+      source=await pdfToCanvas(file);
+    }
+    const worker=await Tesseract.createWorker('eng',1,{
+      logger:m=>{
+        if(m.status==='recognizing text'){
+          bar.style.width=(m.progress*100)+'%';
+          lbl.textContent='Reading text... '+Math.round(m.progress*100)+'%';
+        }else{lbl.textContent=m.status;}
+      }
+    });
+    const{data:{text}}=await worker.recognize(source);
+    await worker.terminate();
+    const parsed=parseReceiptText(text);
+    populateEditForm(parsed,text);
+    showView('view-edit');
+  }catch(err){
+    toast('OCR failed: '+err.message);
+    showUpload();
+  }
 }
 
 // ===== TEXT PARSING =====
-function parseReceiptText(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  if (!lines.length) return {store:'',purchaseDate:'',city:'',country:'',vatNumber:'',currency:'EUR',total:0,subtotal:0,tax:0,tip:0,items:[]};
-
-  const store = (lines[0]||'').replace(/[$]/g,'S').replace(/[0](?=[a-zA-Z])/g,'O').replace(/\bTt([a-z])/g,'It$1').trim(); // Line 0 is ALWAYS the store name
-
-  // === CITY / COUNTRY extraction (from header lines 1-8) ===
-  let city='',country='';
-  const countryMap={'ITALIA':'Italy','ITALY':'Italy','FRANCE':'France','FRANKRIJK':'France','ESPAÑA':'Spain','SPAIN':'Spain','DEUTSCHLAND':'Germany','GERMANY':'Germany','UNITED KINGDOM':'United Kingdom','UK':'United Kingdom','PORTUGAL':'Portugal','NETHERLANDS':'Netherlands','NEDERLAND':'Netherlands','BELGIQUE':'Belgium','BELGIUM':'Belgium','SCHWEIZ':'Switzerland','SWITZERLAND':'Switzerland'};
-  for(let _ci=1;_ci<Math.min(lines.length,10);_ci++){
-    const _cl=lines[_ci].trim();
-    if(!_cl||/\d+[.,]\d{2}\s*$/.test(_cl))continue;
-    // Via/Corso/Piazza → extract city after postal code or comma
-    const _addrM=_cl.match(/^(?:via|corso|piazza|viale|vicolo|strada|largo|rue|avenue|boulevard|calle|carrer|strasse|straße)\s+.+,\s*(?:\d{4,5}\s+)?(.+)$/i);
-    if(_addrM&&!city){city=_addrM[1].replace(/\d{4,5}/,'').trim();continue;}
-    // Postal code + city: "20124 MILANO" or "SW1 LONDON"
-    const _capM=_cl.match(/^\d{4,5}\s+([A-Za-z][A-Za-zs]{2,})$/);
-    if(_capM&&!city){city=_capM[1].trim();continue;}
-    // Standalone known country keyword
-    const _ck=_cl.toUpperCase().replace(/[^A-Zs]/g,'').trim();
-    if(countryMap[_ck]&&!country){country=countryMap[_ck];continue;}
+function parseReceiptText(text){
+  const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
+  let store='';
+  for(const l of lines){
+    if(l.length>2&&!/^\d/.test(l)&&!/total|subtotal|tax|change|cash|card|receipt|thank/i.test(l)){store=l;break;}
   }
-
-  // === CURRENCY — robust: check raw text for symbols, OCR variants, currency codes ===
-  // Order matters: most specific first. € can come through as E in bad OCR.
-  let currency = 'EUR'; // Malta / EU default
-  const tx = text; // full raw text, not trimmed
-  if (/[€€]/.test(tx) || /\bEUR\b/.test(tx) || /\bEuro\b/i.test(tx)) currency = 'EUR';
-  else if (/[££]/.test(tx) || /\bGBP\b/.test(tx)) currency = 'GBP';
-  else if (/\bUSD\b|\bUS\$/.test(tx)) currency = 'USD';
-  else if (/\bCHF\b/.test(tx)) currency = 'CHF';
-  else if (/\bAED\b/.test(tx)) currency = 'AED';
-  else if (/\$/.test(tx)) currency = 'USD';
-
-  // === VAT ===
-  let vatNumber = '';
-  for (const l of lines) {
-    const m = l.match(/vat\s*(?:no\.?|num(?:ber)?|reg\.?|#)?\s*:?\s*([A-Z0-9][\w\s]{2,30})/i);
-    if (m) { vatNumber = m[1].trim().replace(/\s+/g,' '); break; }
-  }
-
-  // === DATE — DD/MM/YYYY (European default) ===
-  const parseEUDate = l => {
-    let m = l.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
-    if (m) {
-      const [,day,mo,y] = m; // assume DD/MM/YYYY
-      if (+mo>=1&&+mo<=12&&+day>=1&&+day<=31) return `${y}-${mo.padStart(2,'0')}-${day.padStart(2,'0')}`;
+  let date='';
+  const dRe=/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})\b/;
+  for(const l of lines){
+    const m=l.match(dRe);
+    if(m){
+      const yr=m[3].length===2?'20'+m[3]:m[3];
+      date=yr+'-'+m[1].padStart(2,'0')+'-'+m[2].padStart(2,'0');
+      break;
     }
-    m = l.match(/(\d{4})-(\d{2})-(\d{2})/);
-    return m ? m[0] : '';
-  };
-  let purchaseDate = '';
-  for (const l of lines) { const d=parseEUDate(l); if(d){purchaseDate=d;break;} }
-
-  // === HELPERS ===
-  const isStopLine = l => /^(total|totale|sub.?total|tax[\s_]anal|tender|tendered|payment|pagamento|change|balance|bov|visa|master|amex|paypal|cash|epos|pos\b|thank|loyalty|reward|cashier|server|assistant\s*:|id\s+%rate|cashback)/i.test(l.trim());
-  const isHeaderLine = l =>
-    /^(triq|street|road|avenue|via|zone|district|central|cbd|www\.|https?:|\.com|\.mt)/i.test(l) ||
-    /\btel\s*(no|:)|\bphone|\bfax\b|^\+\d/i.test(l) ||
-    /\b[A-Z]{2,5}\d{3,5}\b/.test(l) ||
-    /^(vat|tel|fax|www|email)/i.test(l);
-  const isSKU = l => /^[A-Z0-9][A-Z0-9\-\/]{2,14}$/.test(l);
-  // Price at end of line: optional currency symbol (€ £ $ or E for misread €), then digits.decimals
-  const priceAtEnd = l => {
-    const m = l.match(/(?:[€£\$€]|(?:\bE\b)|\bEUR\b)?\s*(\d+[.,]\d{2})\s*$/);
-    return m ? parseFloat(m[1].replace(',','.')) : null;
-  };
-  const countPrices = l => (l.match(/\d+[.,]\d{2}/g)||[]).length;
-
-  // === SECTION BOUNDARIES ===
-  let headerEnd = 1;
-  while (headerEnd < lines.length && isHeaderLine(lines[headerEnd])) headerEnd++;
-  let itemsEnd = lines.length;
-  for (let i=headerEnd; i<lines.length; i++) { if(isStopLine(lines[i])){itemsEnd=i;break;} }
-
-  const sec = lines.slice(headerEnd, itemsEnd);
-
-  // === PRICE-FIRST ITEM EXTRACTION ===
-  // Strategy: anchor on price-bearing lines within the items section.
-  // Work backward from each price-bearing line to find the item name.
-  const items = [];
-
-  for (let j=0; j<sec.length; j++) {
-    const l = sec[j];
-    if (/^[-=_*.]{3,}$/.test(l)) continue;
-
-    // ── Qty pattern: "Qty 1.00 @ 7.85 € 7.85" → most reliable item signal ──
-    const qm = l.match(/qty\s*([\d.]+)\s*[@x*×]\s*([\d.]+)/i) ||
-               l.match(/^(\d+(?:\.\d+)?)\s*[@x×]\s*([\d.]+)(?:\s|$)/);
-    if (qm) {
-      const qty=parseFloat(qm[1]), unitP=parseFloat(qm[2]);
-      const pr=priceAtEnd(l);
-      const tot=pr!==null?pr:parseFloat((qty*unitP).toFixed(2));
-      // Backward-search for name (skip SKUs)
-      let name='', unitSize='';
-      for (let k=j-1; k>=0; k--) {
-        const p=sec[k];
-        if(!p||/^[-=_*.]{3,}$/.test(p)) break;
-        if(isSKU(p)){unitSize=unitSize||p;continue;}
-        if(priceAtEnd(p)!==null) break; // hit another item's price line
-        name=p; break;
-      }
-      items.push({id:uid(),name:name||l.substring(0,50),unitSize,qty,unitPrice:unitP,lineTotal:tot,category:'other',isDiscounted:false,originalPrice:null});
+  }
+  if(!date)date=new Date().toISOString().slice(0,10);
+  let subtotal=0,tax=0,tip=0,total=0;
+  const items=[];
+  const itemRe=/^(.+?)\s+(\d+)?\s*[xX@]?\s*\$?(\d+\.?\d*)\s+\$?(\d+\.\d{2})$/;
+  const priceRe=/^(.+?)\s+\$?(\d+\.\d{2})$/;
+  for(const l of lines){
+    if(/subtotal|sub[\s\-]?total/i.test(l)){const m=l.match(/\$?(\d+\.\d{1,2})/);if(m)subtotal=parseFloat(m[1]);continue;}
+    if(/\btax\b|hst|gst|pst|vat/i.test(l)){const m=l.match(/\$?(\d+\.\d{1,2})/);if(m)tax=parseFloat(m[1]);continue;}
+    if(/\btip\b|gratuity/i.test(l)){const m=l.match(/\$?(\d+\.\d{1,2})/);if(m)tip=parseFloat(m[1]);continue;}
+    if(/\btotal\b|change|cash|card|visa|master|amex|balance|discount|coupon|savings/i.test(l)){
+      const m=l.match(/\$?(\d+\.\d{1,2})/);
+      if(/total/i.test(l)&&m&&parseFloat(m[1])>total)total=parseFloat(m[1]);
       continue;
     }
-
-    // ── Price-bearing line: name + price on same line, exactly ONE price ──
-    const pr = priceAtEnd(l);
-    if (pr!==null && countPrices(l)===1 && !isStopLine(l)) {
-      // Strip price from end to get name
-      const nm = l.replace(/\s*(?:[€£\$€]|\bE\b|\bEUR\b)?\s*\d+[.,]\d{2}\s*$/,'').replace(/\s+\d{1,2}%\s*$/,'').trim();
-      if (nm.length>=2 && /[A-Za-z]/.test(nm)) {
-        items.push({id:uid(),name:nm,unitSize:'',qty:1,unitPrice:pr,lineTotal:pr,category:'other',isDiscounted:false,originalPrice:null});
-      } else {
-        // Price-only line (no name on same line) — look backward for name
-        let name='', unitSize='';
-        for (let k=j-1; k>=0; k--) {
-          const p=sec[k];
-          if(!p||/^[-=_*.]{3,}$/.test(p)) break;
-          if(isSKU(p)){unitSize=unitSize||p;continue;}
-          if(priceAtEnd(p)!==null) break;
-          name=p; break;
-        }
-        if(name) items.push({id:uid(),name,unitSize,qty:1,unitPrice:pr,lineTotal:pr,category:'other',isDiscounted:false,originalPrice:null});
-      }
+    const isDisc=/\bsale\b|disc|off\b|save|\*/i.test(l);
+    const m1=l.match(itemRe);
+    if(m1){
+      const raw=m1[1].replace(/[^a-zA-Z0-9\s\-&',\.]/g,' ').trim();
+      if(raw.length<2)continue;
+      const us=extractUnitSize(raw);
+      const name=us?raw.replace(us,'').trim():raw;
+      items.push({id:uid(),name:name||raw,unitSize:us,qty:parseFloat(m1[2])||1,unitPrice:parseFloat(m1[3]),lineTotal:parseFloat(m1[4]),category:guessCategory(raw),isDiscounted:isDisc,originalPrice:null});
+      continue;
+    }
+    const m2=l.match(priceRe);
+    if(m2){
+      const raw=m2[1].replace(/[^a-zA-Z0-9\s\-&',\.]/g,' ').trim();
+      if(raw.length<2)continue;
+      const us=extractUnitSize(raw);
+      const name=us?raw.replace(us,'').trim():raw;
+      const price=parseFloat(m2[2]);
+      items.push({id:uid(),name:name||raw,unitSize:us,qty:1,unitPrice:price,lineTotal:price,category:guessCategory(raw),isDiscounted:isDisc,originalPrice:null});
     }
   }
-
-  // === TOTALS ===
-  let total=0,subtotal=0,tax=0,tip=0;
-  for (let i=itemsEnd; i<lines.length; i++) {
-    const l=lines[i];
-    if(!purchaseDate){const d=parseEUDate(l);if(d)purchaseDate=d;}
-    const ams=(l.match(/\d+[.,]\d{2}/g)||[]).map(v=>v.replace(',','.'));
-    if(!ams.length) continue;
-    const amt=parseFloat(ams[ams.length-1]);
-    if(/^total/i.test(l)&&!/sub/i.test(l)&&!total) total=amt;
-    if(/sub.?total/i.test(l)&&!subtotal) subtotal=amt;
-    if(/^tip\b|^gratuity/i.test(l)&&!tip) tip=amt;
-    if(/^tax\b/i.test(l)&&ams.length===1&&!tax) tax=amt;
-  }
-
-  return {store,purchaseDate,date:purchaseDate,city,country,vatNumber,currency,total,subtotal,tax,tip,items:items.filter(it=>it.name)};
+  if(!total&&items.length)total=parseFloat(items.reduce((s,i)=>s+(i.lineTotal||0),0).toFixed(2));
+  if(!subtotal&&total>0&&(tax||tip))subtotal=parseFloat((total-tax-tip).toFixed(2));
+  else if(!subtotal&&total>0&&!tax&&!tip)subtotal=total;
+  return{store,date,items,total,subtotal,tax,tip,notes:'',tags:[]};
 }
 
+// ===== TAGS =====
 function handleTagInput(e){
   if(e.key==='Enter'||e.key===','){
     e.preventDefault();
@@ -1063,20 +663,13 @@ function renderTagsInForm(){
 // ===== EDIT FORM =====
 function populateEditForm(parsed,rawText){
   document.getElementById('f-store').value=parsed.store||'';
-const _fff=document.getElementById('f-friendly');if(_fff)_fff.value=parsed.friendlyName||'';
-  const _fci=document.getElementById('f-city');if(_fci)_fci.value=parsed.city||'';
-  const _fco=document.getElementById('f-country');if(_fco)_fco.value=parsed.country||'';
   document.getElementById('f-date').value=parsed.date||new Date().toISOString().slice(0,10);
   document.getElementById('f-name').value='';
-  const _fs=document.getElementById('f-subtotal');if(_fs)_fs.value=parsed.subtotal>0?parsed.subtotal.toFixed(2):'';
-  const _ftax=document.getElementById('f-tax');if(_ftax)_ftax.value=parsed.tax>0?parsed.tax.toFixed(2):'';
-  const _ftip=document.getElementById('f-tip');if(_ftip)_ftip.value=parsed.tip>0?parsed.tip.toFixed(2):'';
+  document.getElementById('f-subtotal').value=parsed.subtotal>0?parsed.subtotal.toFixed(2):'';
+  document.getElementById('f-tax').value=parsed.tax>0?parsed.tax.toFixed(2):'';
+  document.getElementById('f-tip').value=parsed.tip>0?parsed.tip.toFixed(2):'';
   document.getElementById('f-total').value=parsed.total>0?parsed.total.toFixed(2):'';
-  const _fn=document.getElementById('f-notes');if(_fn)_fn.value=parsed.notes||'';
-  document.getElementById('f-vat').value=parsed.vatNumber||'';
-  const _fCurr=document.getElementById('f-currency');
-  if(_fCurr){const _cv=parsed.currency||'EUR';for(const _o of _fCurr.options)_o.selected=_o.value===_cv;}
-  updateCurrSymbols();
+  document.getElementById('f-notes').value=parsed.notes||'';
   _editTags=[...(parsed.tags||[])];
   renderTagsInForm();
   const tbody=document.getElementById('items-body');
@@ -1092,7 +685,6 @@ const _fff=document.getElementById('f-friendly');if(_fff)_fff.value=parsed.frien
   document.getElementById('edit-title').textContent='New Receipt';
 }
 
-function recalcLine(inp){const tr=inp.closest('tr');const qty=parseFloat(tr.querySelector('.col-qty input').value)||0;const up=parseFloat(tr.querySelectorAll('.col-price input')[0].value)||0;tr.querySelectorAll('.col-price input')[1].value=(qty*up).toFixed(2);updateItemsTotal();}
 function addItemRow(item){
   item=item||{id:uid(),name:'',unitSize:'',qty:1,unitPrice:0,lineTotal:0,category:'other',isDiscounted:false,originalPrice:null};
   const tbody=document.getElementById('items-body');
@@ -1101,38 +693,32 @@ function addItemRow(item){
   const catOpts=CATS.map(c=>`<option value="${c}"${c===item.category?' selected':''}>${c}</option>`).join('');
   tr.innerHTML=`
     <td class="col-name"><input type="text" value="${esc(item.name)}" placeholder="Item name" oninput="updateItemsTotal()"></td>
-    <td class="col-cat"><select>${catOpts}</select></td>
     <td class="col-unit"><input type="text" value="${esc(item.unitSize||'')}" placeholder="e.g. 250ml"></td>
-    <td class="col-qty"><input type="number" value="${item.qty||1}" min="1" step="1" oninput="recalcLine(this)"></td>
-    <td class="col-price"><input type="number" value="${(item.unitPrice||0).toFixed(2)}" min="0" step="0.01" oninput="recalcLine(this)"></td>
-    <td class="col-disc"><select onchange="updateItemsTotal()"><option value="N"${!item.isDiscounted?' selected':''}>N</option><option value="Y"${item.isDiscounted?' selected':''}>Y</option></select></td>
+    <td class="col-qty"><input type="number" value="${item.qty||1}" min="0" step="0.01" style="width:44px" oninput="updateItemsTotal()"></td>
+    <td class="col-price"><input type="number" value="${(item.unitPrice||0).toFixed(2)}" min="0" step="0.01" oninput="updateItemsTotal()"></td>
     <td class="col-price"><input type="number" value="${(item.lineTotal||0).toFixed(2)}" min="0" step="0.01" oninput="updateItemsTotal()"></td>
+    <td class="col-cat"><select>${catOpts}</select></td>
+    <td class="col-disc"><input type="checkbox type="checkbox" class="disc-check"${item.isDiscounted?' checked':''}></td>
     <td class="col-del"><button class="del-btn" onclick="this.closest('tr').remove();updateItemsTotal()">&#x2715;</button></td>`;
   tbody.appendChild(tr);
+  // Attach library item autocomplete to the new name input
+  if (window.LibraryClient) {
+    const nameInput = tr.querySelector('.col-name input');
+    if (nameInput) LibraryClient.attachAutocomplete(nameInput, {
+      type: 'item',
+      onSelect: i => { nameInput.value = i.name; updateItemsTotal(); }
+    });
+  }
   updateItemsTotal();
 }
 
 function updateItemsTotal(){
-const rows=[...document.querySelectorAll('#items-body tr')];
-const itemsSum=parseFloat(rows.reduce((s,tr)=>{
-const v=parseFloat(tr.querySelectorAll('input')[4]?.value)||0;
-return s+v;
-},0).toFixed(2));
-const _itd=document.getElementById('items-total-display');if(_itd)_itd.textContent=fmt(itemsSum);
-const _itc2=document.getElementById('items-total-cell');if(_itc2){_itc2.textContent=fmt(itemsSum);_itc2.style.color='';}
-const receiptTotal=parseFloat(parseFloat(document.getElementById('f-total')?.value||0).toFixed(2));
-const recon=document.getElementById('recon-bar');
-if(!recon)return;
-if(rows.length===0||receiptTotal===0){recon.style.display='none';return;}
-const diff=Math.abs(itemsSum-receiptTotal);
-if(diff<0.02){
-recon.style.display='none';recon.style.background='#e6f9ed';recon.style.border='1px solid #1a6e38';
-const _itc=document.getElementById('items-total-cell');if(_itc){_itc.textContent=fmt(itemsSum);_itc.style.color='';}
-recon.innerHTML='<span style="color:#1a6e38">✓ Items total matches receipt total ('+fmt(itemsSum)+')</span>';
-}else{
-recon.style.display='block';recon.style.background='#fff5f5';recon.style.border='1px solid #c53030';const _itcR=document.getElementById('items-total-cell');if(_itcR)_itcR.style.color='#c53030';
-recon.innerHTML='<span style="color:#c53030">⚠ Items '+fmt(itemsSum)+' ≠ receipt total '+fmt(receiptTotal)+' — please check line items</span>';
-}
+  const rows=[...document.querySelectorAll('#items-body tr')];
+  const total=rows.reduce((s,tr)=>{
+    const v=parseFloat(tr.querySelectorAll('input')[4]?.value)||0;
+    return s+v;
+  },0);
+  document.getElementById('items-total-display').textContent=fmt(total);
 }
 
 function readItemRows(){
@@ -1145,8 +731,8 @@ function readItemRows(){
       qty:parseFloat(ins[2].value)||1,
       unitPrice:parseFloat(ins[3].value)||0,
       lineTotal:parseFloat(ins[4].value)||0,
-      category:tr.querySelector('.col-cat select')?.value||'other',
-      isDiscounted:tr.querySelector('.col-disc select')?.value==='Y',
+      category:tr.querySelector('select').value,
+      isDiscounted:ins[5]?.checked||false,
       originalPrice:null
     };
   }).filter(it=>it.name);
@@ -1155,21 +741,17 @@ function readItemRows(){
 // ===== SAVE =====
 function doSave(){
   const store=document.getElementById('f-store').value.trim();
-const friendlyName=(document.getElementById('f-friendly')||{value:''}).value.trim();
-  const city=(document.getElementById('f-city')||{value:''}).value.trim();
-  const country=(document.getElementById('f-country')||{value:''}).value.trim();
   const date=document.getElementById('f-date').value;
   const total=parseFloat(document.getElementById('f-total').value)||0;
-  const subtotal=parseFloat((document.getElementById('f-subtotal')||{value:'0'}).value)||0;
-  const tax=parseFloat((document.getElementById('f-tax')||{value:'0'}).value)||0;
-  const tip=parseFloat((document.getElementById('f-tip')||{value:'0'}).value)||0;
-  const notes=(document.getElementById('f-notes')||{value:''}).value.trim();
+  const subtotal=parseFloat(document.getElementById('f-subtotal').value)||0;
+  const tax=parseFloat(document.getElementById('f-tax').value)||0;
+  const tip=parseFloat(document.getElementById('f-tip').value)||0;
+  const notes=document.getElementById('f-notes').value.trim();
   const items=readItemRows();
   const effectiveTotal=total||parseFloat(items.reduce((s,i)=>s+(i.lineTotal||0),0).toFixed(2));
   const rawName=document.getElementById('f-name').value.trim();
-  const name=rawName||(store&&date?date+' - '+store:date||'Receipt '+new Date().toLocaleDateString());
-  const vat=document.getElementById('f-vat').value.trim();const currency=(document.getElementById('f-currency')||{value:'EUR'}).value||'EUR';
-  const data={store,friendlyName,purchaseDate:date,date,city,country,name,items,total:effectiveTotal,subtotal,tax,tip,vat,currency,notes,tags:[..._editTags]};
+  const name=rawName||(store&&date?store+' – '+date:date||'Receipt '+new Date().toLocaleDateString());
+  const data={store,purchaseDate:date,date,name,items,total:effectiveTotal,subtotal,tax,tip,notes,tags:[..._editTags]};
   const dup=receipts.find(r=>{
     if(r.id===currentId)return false;
     const sameStore=(r.store||'').toLowerCase()===(store||'').toLowerCase();
@@ -1199,7 +781,7 @@ function commitSave(data){
 // ===== DETAIL =====
 function renderDetail(r){
   document.getElementById('d-name').textContent=r.name||'Receipt';
-  document.getElementById('d-meta').textContent=[(r.store||''),(r.purchaseDate||r.date||''),(r.vatNumber||r.vat||''),(r.currency&&r.currency!=='EUR'?r.currency:'')].filter(Boolean).join(' Â· ')
+  document.getElementById('d-meta').textContent=[(r.store||''),(r.purchaseDate||r.date||'')].filter(Boolean).join(' · ');
   const tagsEl=document.getElementById('d-tags-display');
   tagsEl.innerHTML=(r.tags||[]).map(t=>'<span class="tag-chip">'+esc(t)+'</span>').join('');
   const notesEl=document.getElementById('d-notes-box');
@@ -1215,7 +797,7 @@ function renderDetail(r){
     ].filter(Boolean).join('');
   }else{totBox.style.display='none';}
   const tbody=document.getElementById('receipt-body');
-  tbody.innerHTML=(r.items||[]).map(it=>'<tr><td>'+esc(it.name)+(it.isDiscounted?' <span style="color:#1a6e38;font-size:.7rem">SALE</span>':'')+'</td><td class="col-cat">'+esc(it.category||'')+'</td><td class="col-unit">'+esc(it.unitSize||'')+'</td><td class="col-qty">'+(it.qty||1)+'</td><td class="col-price" style="text-align:right">'+fmt(it.unitPrice)+'</td><td class="col-price" style="text-align:right">'+fmt(it.lineTotal)+'</td></tr>').join('');
+  tbody.innerHTML=(r.items||[]).map(it=>'<tr><td>'+esc(it.name)+(it.isDiscounted?' <span style="color:#1a6e38;font-size:.7rem">SALE</span>':'')+'</td><td class="col-unit">'+esc(it.unitSize||'')+'</td><td class="col-qty">'+(it.qty||1)+'</td><td class="col-price">'+fmt(it.unitPrice)+'</td><td class="col-price">'+fmt(it.lineTotal)+'</td><td>'+esc(it.category||'')+'</td></tr>').join('');
   document.getElementById('d-total').textContent=fmt(r.total);
   const rawBox=document.getElementById('raw-box-detail');
   rawBox.textContent=r.raw||'';
@@ -1227,7 +809,7 @@ function renderDetail(r){
 function enterEditMode(){
   const r=receipts.find(x=>x.id===currentId);
   if(!r)return;
-  editBackup=JSON.parse(JSON.stringify(r));_scannedImageUrl=null;
+  editBackup=JSON.parse(JSON.stringify(r));
   document.getElementById('edit-title').textContent='Edit Receipt';
   populateEditForm(r,r.raw||'');
   showView('view-edit');
@@ -1316,7 +898,7 @@ function renderPriceTracker(){
   const cards=tracked.slice(0,20).map(g=>{
     const prices=g.entries.map(e=>e.price).filter(p=>p>0);
     if(!prices.length)return'';
-    const avg=prices.reduce((s,p)=>s+p,0)/prices.length;
+    const avg;prices.reduce((s,p)=>s+p,0)/prices.length;
     const best=Math.min(...prices);
     const worst=Math.max(...prices);
     const byStore={};
@@ -1341,6 +923,36 @@ function runItemSearch(query){
   el.innerHTML=results.map(g=>{
     const rows=g.hits.sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(h=>'<div class="ir-row"><span>'+esc(h.store)+'</span><span>'+h.date+'</span><span>'+(h.isDisc?'&#x1F4B0; ':'')+' <strong>'+fmt(h.price)+'</strong></span></div>').join('');
     return'<div class="item-result"><div class="ir-name">'+esc(g.name)+(g.unit?' <span style="color:var(--text-muted);font-size:.76rem">('+esc(g.unit)+')</span>':'')+'</div><div class="ir-meta">Found in '+g.hits.length+' purchase'+(g.hits.length!==1?'s':'')+'</div>'+rows+'</div>';
+  }).join('');
+}
+
+// ── Library Client store autocomplete ──────────────────────────────
+function wireLibraryStore(){
+  const el = document.getElementById('f-store');
+  if (!el || el._lcAttached) return;
+  el._lcAttached = true;
+  LibraryClient.attachAutocomplete(el, { type: 'store', onSelect: s => { el.value = s.friendlyName || s.name; } });
+}
+</script>
+<script src="https://my-library-tan.vercel.app/library-client.js" onload="wireLibraryStore()"></script>
+</body>
+</html>
+,isDisc:it.isDiscounted,receiptId:r.id});
+    });
+  });
+  const results=Object.values(groups).sort((a,b)=>b.hits.length-a.hits.length);
+  if(!results.length){el.innerHTML=`<div class="no-data">No items matching "${esc(query)}"</div>`;return;}
+  el.innerHTML=results.map(g=>{
+    const rows=g.hits.sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8).map(h=>`<div class="ir-row">
+      <span>${esc(h.store)}</span>
+      <span>${h.date}</span>
+      <span>${h.isDisc?'&#x1F4B0; ':''}<strong>${fmt(h.price)}</strong></span>
+    </div>`).join('');
+    return`<div class="item-result">
+      <div class="ir-name">${esc(g.name)}${g.unit?' <span style="color:var(--text-muted);font-size:.76rem">('+esc(g.unit)+')</span>':''}</div>
+      <div class="ir-meta">Found in ${g.hits.length} purchase${g.hits.length!==1?'s':''}</div>
+      ${rows}
+    </div>`;
   }).join('');
 }
 </script>
